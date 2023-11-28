@@ -12,6 +12,8 @@ find_package(GLEW REQUIRED)
 set(CMAKE_PREFIX_PATH "libraries/SDL2")
 set(CMAKE_MODULE_PATH "libraries/SDL2/cmake/sdl2-config.cmake")
 find_package(SDL2 REQUIRED)
+set(CMAKE_PREFIX_PATH "libraries/SDL2_image")
+set(CMAKE_MODULE_PATH "libraries/SDL2_image/cmake/sdl2_image-config.cmake")
 find_package(SDL2_image REQUIRED)
 find_package(OpenGL REQUIRED)
 
