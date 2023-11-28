@@ -22,7 +22,8 @@ int main(int argc, char *argv[]){
   // Version 3.3
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); //?
 
-
+  SDL_Window* window_sdl = SDL_CreateWindow("SDL2", kWindowX + kWidth, kWindowY, kWidth, kHeight, 0);
+  SDL_Renderer* renderer_sdl = SDL_CreateRenderer(window_sdl, -1, 0);
   IMG_Init(IMG_INIT_JPG);
   SDL_Texture* text = SDL_CreateTextureFromSurface(renderer_sdl, IMG_Load("mower.jpg"));
 
