@@ -12,12 +12,13 @@ find_package(GLEW REQUIRED)
 set(CMAKE_PREFIX_PATH "libraries/SDL2")
 set(CMAKE_MODULE_PATH "libraries/SDL2/cmake/sdl2-config.cmake")
 find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
 find_package(OpenGL REQUIRED)
 
 add_executable(MowerExecutable "src/main.cpp" "include/Shader.h")
 
 target_include_directories(MowerExecutable PUBLIC "include" ${SDL2_INCLUDE_DIRS})
-target_link_libraries(MowerExecutable PRIVATE GLEW::GLEW ${OPENGL_gl_LIBRARY} ${SDL2_LIBRARIES})
+target_link_libraries(MowerExecutable PRIVATE GLEW::GLEW ${OPENGL_gl_LIBRARY} ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
 
 add_custom_command(TARGET MowerExecutable POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:MowerExecutable> $<TARGET_FILE_DIR:MowerExecutable>
@@ -38,6 +39,11 @@ file(
 
 file(
 	COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/vertices.txt
+	DESTINATION ${CMAKE_BINARY_DIR}
+	FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+)
+file(
+	COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets/mower.jpg
 	DESTINATION ${CMAKE_BINARY_DIR}
 	FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 )

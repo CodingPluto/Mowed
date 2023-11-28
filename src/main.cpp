@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <array>
+#include <SDL_image.h>
 const GLint kWidth = 800, kHeight = 600;
 const GLint kWindowY = 200;
 const GLint kWindowX = 200;
@@ -13,12 +14,18 @@ const GLint kWindowX = 200;
 
 
 int main(int argc, char *argv[]){
+
   SDL_Init(SDL_INIT_EVERYTHING);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
   // Version 3.3
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); //?
+
+
+  IMG_Init(IMG_INIT_JPG);
+  SDL_Texture* text = SDL_CreateTextureFromSurface(renderer_sdl, IMG_Load("mower.jpg"));
+
   SDL_Window* window = SDL_CreateWindow("OpenGL", kWindowX, kWindowY, kWidth, kHeight, SDL_WINDOW_OPENGL);
   SDL_GLContext context = SDL_GL_CreateContext(window);
   
@@ -89,6 +96,7 @@ int main(int argc, char *argv[]){
 
   SDL_Event event;
   while (true) {
+
     if (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT){
         break;
