@@ -9,7 +9,8 @@
 #include <GL/glew.h>
 #include <SDL_Opengl.h>
 
-class Shader{
+// Class for reading shader files and loading shaders.
+class Shader{ 
 public:
   GLuint program;
 

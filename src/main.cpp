@@ -6,122 +6,197 @@
 #include <fstream>
 #include <sstream>
 #include <array>
-#include <SDL_image.h>
-const GLint kWidth = 800, kHeight = 600;
-const GLint kWindowY = 200;
-const GLint kWindowX = 200;
+#include <SOIL2.h>
+#include <vector>
+//#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
+
+GLuint load_vertices(GLfloat old_vertices[32]);
+
+GLuint load_texture(const char imagePath[]);
+std::vector <GLuint*> vbo_cache;
+
+std::vector<GLuint*> ebo_cache;
+
+std::vector<GLuint*> vao_cache;
+
+const GLuint WIDTH = 800, HEIGHT = 600;
+
+int main(int argc, char *argv[])
+{
+    //////////////////// INIT INIT /////////////////////////////
+    SDL_Init(SDL_INIT_EVERYTHING);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); //?
+
+
+    //////////////////////// Create Window //////////////////////
+    SDL_Window* window = SDL_CreateWindow("OpenGL", 300, 300, WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
+    SDL_GLContext context = SDL_GL_CreateContext(window);
+
+    //////////////////////// INIT GLEW //////////////////////
+    glewExperimental = GL_TRUE;
+    if (GLEW_OK != glewInit()) {
+      std::cout << "Couldn't Initalise GLEW" << std::endl;
+      return EXIT_FAILURE;
+    }
+
+    //////////////////////// Create Viewport //////////////////////
+    glViewport(0, 0, WIDTH, HEIGHT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    // Shaders (see Shader.h)
+    Shader our_shader( "core.vs", "core.frag" );
+
+    /////////////////////// Vertex Data //////////////////////
+    GLfloat vertices[] = {
+        // Positions          // Colors           // Texture Coords
+        0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
+        0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
+        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left
+    };
+    GLuint vao = load_vertices(vertices);
+    GLfloat vertices2[] = {
+        // Positions          // Colors           // Texture Coords
+        1.0f,  1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
+        1.0f, -1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
+        -1.0f, -1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
+        -1.0f,  1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left
+    };
+    GLuint vao2 = load_vertices(vertices2);
+
+
+    /////////////////////// Loading Texture //////////////////////
+    auto texture_png= load_texture("mower.png");
+    auto texture_jpg = load_texture("test_image.jpg");
+
+    //////////////////////////////////////////////////////////////////////////
+    //////////////////////////////// Game Loop ///////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
+    SDL_Event event;
+    while (true)
+    {
+        if (SDL_PollEvent(&event)) {
+          if (event.type == SDL_QUIT) {
+            break;
+          }
+        }
+        glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );
+        glClear( GL_COLOR_BUFFER_BIT );
+        // Draw the triangle
+        our_shader.Use( );
+        glActiveTexture( GL_TEXTURE0 );
+
+
+        glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture" ), 0 );
+
+        glBindTexture(GL_TEXTURE_2D, texture_png);
+        glBindVertexArray(vao2);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+
+        glBindTexture(GL_TEXTURE_2D, texture_jpg);
+        glBindVertexArray(vao);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+
+        // Swap the screen buffers
+        SDL_GL_SwapWindow(window);
+    }
+    /////////////////////////////// Clean Up //////////////////////////////
+    for (auto vao : vao_cache)
+    {
+      glDeleteVertexArrays(1, &(*vao));
+
+    }
+    for (auto vbo : vbo_cache)
+    {
+      glDeleteVertexArrays(1, &(*vbo));
+
+    }
+    for (auto ebo : ebo_cache)
+    {
+      glDeleteVertexArrays(1, &(*ebo));
+
+    }
+    vao_cache.clear();
+    vbo_cache.clear();
+    ebo_cache.clear();
+    SDL_GL_DeleteContext(context);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return EXIT_SUCCESS;
+}
 
 
 
-int main(int argc, char *argv[]){
 
-  SDL_Init(SDL_INIT_EVERYTHING);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-  // Version 3.3
-  SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); //?
+GLuint load_texture(const char imagePath[])
+{
+  GLuint texture;
+  int width, height;
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  // texture parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  // texture filtering
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  unsigned char* image = SOIL_load_image(imagePath, &width, &height, 0, SOIL_LOAD_RGBA);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  // Free image (texture kept)
+  SOIL_free_image_data(image);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  return texture;
+}
 
-  SDL_Window* window_sdl = SDL_CreateWindow("SDL2", kWindowX + kWidth, kWindowY, kWidth, kHeight, 0);
-  SDL_Renderer* renderer_sdl = SDL_CreateRenderer(window_sdl, -1, 0);
-  IMG_Init(IMG_INIT_JPG);
-  SDL_Texture* text = SDL_CreateTextureFromSurface(renderer_sdl, IMG_Load("mower.jpg"));
 
-  SDL_Window* window = SDL_CreateWindow("OpenGL", kWindowX, kWindowY, kWidth, kHeight, SDL_WINDOW_OPENGL);
-  SDL_GLContext context = SDL_GL_CreateContext(window);
-  
-  glewExperimental = GL_TRUE;
-
-  if (GLEW_OK != glewInit()){
-    std::cout << "Couldn't Initalise GLEW" << std::endl;
-
-    return EXIT_FAILURE;
+GLuint load_vertices(GLfloat old_vertices[32])
+{
+  GLfloat vertices[32];
+  for (int i = 0; i < 32; ++i)
+  {
+    vertices[i] = old_vertices[i];
   }
-  glViewport(0, 0, kWidth, kHeight);
-
-  Shader shader_program("core.vs","core.frag");
-
-
-
-  // x, y, z
-  GLfloat vertices[] = {
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, // bottom left
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,// bottom right
-  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
+  GLuint indices[] =
+  {
+      0, 1, 3, // First Triangle
+      1, 2, 3  // Second Triangle
   };
-  //0,1
-  //6,7
-  //12,13
-  std::ifstream source;
-  try
-  {
-    source.open("vertices.txt");
-  }
-  catch (std::ifstream::failure e)
-  {
-    std::cout << "Vertex file not read properly." << std::endl;
-  }
-  int i = 0;
-  for (std::string line; std::getline(source, line); )   //read stream line by line
-  {
-    std::istringstream in(line);      //make a stream for the line itself
-    in >> vertices[i] >> vertices[i+1] >> vertices[i + 2] >> vertices[i + 3] >> vertices[i + 4] >> vertices[i + 5];
-    i += 6;
-
-  }
-  source.close();
-
-  for (auto vertice : vertices)
-  {
-    std::cout << vertice << std::endl;
-  }
-
-  GLuint vbo, vao;
+  /////////////////////// Creatng Buffers //////////////////////
+  GLuint vbo, vao, ebo;
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vbo);
-
+  glGenBuffers(1, &ebo);
+  // vao
   glBindVertexArray(vao);
+  // vbo
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+  // ebo
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+  /////////////////////// Setting Attributes //////////////////////
+  // Position attribute
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
   glEnableVertexAttribArray(0);
-
-
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+  // Color attribute
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
   glEnableVertexAttribArray(1);
-  //unbinding
-  //glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
+  // Texture Coordinate attribute
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+  glEnableVertexAttribArray(2);
+  glBindVertexArray(0); // Unbind VAO
 
-
-  SDL_Event event;
-  while (true) {
-
-    if (SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT){
-        break;
-      }
-    }
-  glClearColor(0.1f, 0.1f, 0.4f, 0.5); // set colour
-  glClear(GL_COLOR_BUFFER_BIT); // refresh
-
-  shader_program.Use();
-  glBindVertexArray(vao);
-  glDrawArrays(GL_TRIANGLES, 0, 3); // actual draw part lol
-  glBindVertexArray(0);
-
-  // Draw OpenGL;
-  SDL_GL_SwapWindow(window);
-  }
-
-  glDeleteVertexArrays(1, &vao);
-  glDeleteBuffers(1, &vbo);
-
-  SDL_GL_DeleteContext(context);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
-
-
-  return EXIT_SUCCESS;
+  vbo_cache.emplace_back(&vbo);
+  vao_cache.emplace_back(&vao);
+  ebo_cache.emplace_back(&ebo);
+  return vao;
 }
