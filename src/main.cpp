@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
   }
   glViewport(0, 0, kWidth, kHeight);
 
-  Shader shader_program("shaders/core.vs","shaders/core.frag");
+  Shader shader_program("core.vs","core.frag");
 
 
 
