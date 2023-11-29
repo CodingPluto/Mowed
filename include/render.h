@@ -18,6 +18,7 @@ extern std::vector<GLuint*> vao_cache;
 GLuint load_vertices_ex(int raw_x, int raw_y, int raw_width, int raw_height, bool relative = true);
 GLuint load_vertices(GLfloat old_vertices[32]);
 GLuint load_texture(const char imagePath[]);
+void render_texture(GLuint vao, GLuint texture);
 
 std::pair<GLuint,std::pair<int,int>>load_texture_ex(const char imagePath[]);
 

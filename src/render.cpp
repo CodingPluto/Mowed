@@ -201,6 +201,14 @@ GLuint load_texture(const char imagePath[])
   return texture;
 }
 
+void render_texture(GLuint vao, GLuint texture)
+{
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glBindVertexArray(vao);
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  glBindVertexArray(0);
+}
+
 
 GLuint load_vertices(GLfloat old_vertices[32])
 {

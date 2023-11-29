@@ -81,41 +81,30 @@ int main(int argc, char *argv[])
         our_shader.Use( );
         glActiveTexture( GL_TEXTURE0 );
 
-
         glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture" ), 0 );
         player.render();
 
         auto vao = load_vertices_ex(300, 300, test_width, test_height);
-        glBindTexture(GL_TEXTURE_2D, texture_test);
-        glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
 
-        glBindTexture(GL_TEXTURE_2D, player.texture);
-        glBindVertexArray(player.vao);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        render_texture(vao, texture_test);
+        render_texture(player.vao, player.texture);
 
         // Swap the screen buffers
         SDL_GL_SwapWindow(window);
-
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
     /////////////////////////////// Clean Up //////////////////////////////
     for (auto vao : vao_cache)
     {
       glDeleteVertexArrays(1, &(*vao));
-
     }
     for (auto vbo : vbo_cache)
     {
       glDeleteVertexArrays(1, &(*vbo));
-
     }
     for (auto ebo : ebo_cache)
     {
       glDeleteVertexArrays(1, &(*ebo));
-
     }
     vao_cache.clear();
     vbo_cache.clear();
