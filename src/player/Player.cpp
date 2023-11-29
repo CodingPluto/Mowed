@@ -27,8 +27,6 @@ void Player::controller()
     _rect.y -= 3;
   }
 
-
-
 }
 
 Player::Player():_keyboard(SDL_GetKeyboardState(0))
