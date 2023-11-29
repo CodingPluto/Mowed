@@ -2,26 +2,32 @@
 #include <SDL.h>
 #include <iostream>
 #include <render.h>
-
+GLuint Player::player_textures[8] = {};
 
 void Player::controller()
 {
   if (keyboard[SDL_SCANCODE_D])
   {
+    state = player_walk_left;
     rect.x += 3;
   }
   if (keyboard[SDL_SCANCODE_A])
   {
+    state = player_walk_right;
     rect.x -= 3;
   }
   if (keyboard[SDL_SCANCODE_S])
   {
+    state = player_walk_down;
     rect.y += 3;
   }
   if (keyboard[SDL_SCANCODE_W])
   {
+    state = player_walk_up;
     rect.y -= 3;
   }
+
+
 
 }
 
@@ -39,9 +45,9 @@ Player::Player():keyboard(SDL_GetKeyboardState(0))
 void Player::update()
 {
   std::cout << HEIGHT << std::endl;
+  controller();
   camera_x = rect.x - (WIDTH / 2 - rect.w / 2);
   camera_y = rect.y - (HEIGHT / 2 - rect.h / 2);
-  controller();
 }
 
 void Player::render()
