@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
 project ("Mower")
 add_definitions(-DGLEW_STATIC)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_PREFIX_PATH "libraries/glew/")
 set(GLEW_INCLUDE_DIRS "libraries/glew/include")
 find_library(GLEW_LIBRARIES glew32s PATHS "${CMAKE_CURRENT_SOURCE_DIR}/libraries/glew/lib/Release/x64")
