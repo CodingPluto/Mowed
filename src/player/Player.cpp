@@ -38,6 +38,9 @@ Player::Player():keyboard(SDL_GetKeyboardState(0))
 
 void Player::update()
 {
+  std::cout << HEIGHT << std::endl;
+  camera_x = rect.x - (WIDTH / 2 - rect.w / 2);
+  camera_y = rect.y - (HEIGHT / 2 - rect.h / 2);
   controller();
 }
 
