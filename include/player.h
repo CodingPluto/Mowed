@@ -1,5 +1,5 @@
-#ifndef PLAYER_PLAYER_H
-#define PLAYER_PLAYER_H
+#ifndef PLAYER_H
+#define PLAYER_H
 #include <SDL.h>
 #include <GL/glew.h>
 
@@ -31,4 +31,4 @@ public:
 };
 
 
-#endif //PLAYER_PLAYER_H
+#endif //PLAYER_H

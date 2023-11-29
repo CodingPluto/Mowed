@@ -8,7 +8,7 @@
 #include <array>
 #include <SOIL2.h>
 #include <vector>
-#include <player/Player.h>
+#include <player.h>
 #include <render.h>
 #include <chrono>
 #include <thread>
