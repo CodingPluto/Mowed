@@ -1,4 +1,4 @@
-#include <player/Player.h>
+#include <player.h>
 #include <SDL.h>
 #include <iostream>
 #include <render.h>
