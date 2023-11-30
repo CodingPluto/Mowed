@@ -47,4 +47,3 @@ void animation::QueState(int state)
 {
     state_que_.emplace_front(state);
 }
-

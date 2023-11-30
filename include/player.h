@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 
 #include <SDL_OpenGL.h>
+#include <animation.h>
 
 enum PlayerState
 {
