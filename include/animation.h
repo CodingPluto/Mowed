@@ -18,7 +18,7 @@ public:
 private:
 	std::vector<std::vector<std::pair<GLuint, GLuint>>> animations_;
 	std::pair<int, int> animation_frame_; 
-	int animation_fps_:
+	int animation_fps_;
 //	int next_animation_;
 	int last_timestep_ = 0;
 	std::vector<int> state_que_;

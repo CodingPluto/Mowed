@@ -29,6 +29,7 @@ public:
   void render();
   GLint texture;
   GLint vao;
+  animation animation_;
 };
 
 

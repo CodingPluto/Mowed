@@ -29,7 +29,7 @@ void Player::controller()
 
 }
 
-Player::Player():_keyboard(SDL_GetKeyboardState(0))
+Player::Player():_keyboard(SDL_GetKeyboardState(0)), animation_("player")
 {
   _rect.x = 0;
   _rect.y = 0;
