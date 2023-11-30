@@ -31,6 +31,8 @@ GLuint animation::GetFrame()
     }
     if (QueState.size() != 0) {
         if (animation_frame_.second == 0) {
+            animation_frame_.first = state_que_.back();
+            state_que_.pop_back();
         }
     }
     return animations_[animation_frame_.first][animation_frame_.second]
@@ -43,6 +45,6 @@ void animation::Setstate(int state)
 
 void animation::QueState(int state)
 {
-    state_que_.emplace_back(state);
+    state_que_.emplace_front(state);
 }
 
