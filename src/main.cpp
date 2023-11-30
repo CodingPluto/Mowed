@@ -12,6 +12,7 @@
 #include <render.h>
 #include <chrono>
 #include <thread>
+#include <grass.h>
 //#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
 
 int main(int argc, char *argv[])
@@ -67,33 +68,41 @@ int main(int argc, char *argv[])
     //////////////////////////////////////////////////////////////////////////
     SDL_Event event;
     Player player;
-    while (true)
+    Grass::generate_grass();
+
+    double old_time = 0;
+    double current_time = 0;
+    double delta_time = 0;
+     while (true)
     {
-        if (SDL_PollEvent(&event)) {
-          if (event.type == SDL_QUIT) {
-            break;
-          }
+      old_time = current_time;
+      if (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+          break;
         }
-        player.update();
-        glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );
-        glClear( GL_COLOR_BUFFER_BIT );
-        // Draw the triangle
-        our_shader.Use( );
-        glActiveTexture( GL_TEXTURE0 );
+      }
+      player.update();
+      glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );
+      glClear( GL_COLOR_BUFFER_BIT );
+      // Draw the triangle
+      our_shader.Use( );
+      glActiveTexture( GL_TEXTURE0 );
 
-        glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture" ), 0 );
-        player.render();
+      glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture" ), 0 );
+      player.render();
 
-        auto vao = load_vertices_ex(300, 300, test_width, test_height);
-
-        render_texture(vao, texture_test);
-        render_texture(player.vao, player.texture);
-
-        // Swap the screen buffers
-        SDL_GL_SwapWindow(window);
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+      auto vao = load_vertices_ex(300, 300, test_width, test_height);
+      Grass::render_grasses();
+      render_texture(vao, texture_test);
+      render_texture(player.vao, player.texture);
+      // Swap the screen buffers
+      SDL_GL_SwapWindow(window);
+      current_time = SDL_GetTicks();
+      delta_time = (current_time - old_time) * pow(10,-3);
+      std::cout << delta_time << std::endl;
+      //std::this_thread::sleep_for(std::chrono::milliseconds(8));
     }
-    /////////////////////////////// Clean Up //////////////////////////////
+
     for (auto vao : vao_cache)
     {
       glDeleteVertexArrays(1, &(*vao));
@@ -109,6 +118,9 @@ int main(int argc, char *argv[])
     vao_cache.clear();
     vbo_cache.clear();
     ebo_cache.clear();
+    /////////////////////////////// Clean Up //////////////////////////////
+
+    Grass::free_grass();
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();

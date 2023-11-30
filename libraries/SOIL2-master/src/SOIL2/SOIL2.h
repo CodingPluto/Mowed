@@ -333,8 +333,8 @@ unsigned int
 	Creates a 2D OpenGL texture from raw image data.  Note that the raw data is
 	_NOT_ freed after the upload (so the user can load various versions).
 	\param data the raw data to be uploaded as an OpenGL texture
-	\param width the pointer of the width of the image in pixels ( if the texture size change, width will be overrided with the new width )
-	\param height the pointer of the height of the image in pixels ( if the texture size change, height will be overrided with the new height )
+	\param _width the pointer of the _width of the image in pixels ( if the texture size change, _width will be overrided with the new _width )
+	\param _height the pointer of the _height of the image in pixels ( if the texture size change, _height will be overrided with the new _height )
 	\param channels the number of channels: 1-luminous, 2-luminous/alpha, 3-RGB, 4-RGBA
 	\param reuse_texture_ID 0-generate a new texture ID, otherwise reuse the texture ID (overwriting the old texture)
 	\param flags can be any of SOIL_FLAG_POWER_OF_TWO | SOIL_FLAG_MIPMAPS | SOIL_FLAG_TEXTURE_REPEATS | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_INVERT_Y | SOIL_FLAG_COMPRESS_TO_DXT
@@ -344,7 +344,7 @@ unsigned int
 	SOIL_create_OGL_texture
 	(
 		const unsigned char *const data,
-		int *width, int *height, int channels,
+		int *_width, int *_height, int channels,
 		unsigned int reuse_texture_ID,
 		unsigned int flags
 	);
@@ -352,8 +352,8 @@ unsigned int
 /**
 	Creates an OpenGL cubemap texture by splitting up 1 image into 6 parts.
 	\param data the raw data to be uploaded as an OpenGL texture
-	\param width the width of the image in pixels
-	\param height the height of the image in pixels
+	\param _width the _width of the image in pixels
+	\param _height the _height of the image in pixels
 	\param channels the number of channels: 1-luminous, 2-luminous/alpha, 3-RGB, 4-RGBA
 	\param face_order the order of the faces in the file, and combination of NSWEUD, for North, South, Up, etc.
 	\param reuse_texture_ID 0-generate a new texture ID, otherwise reuse the texture ID (overwriting the old texture)
@@ -364,7 +364,7 @@ unsigned int
 	SOIL_create_OGL_single_cubemap
 	(
 		const unsigned char *const data,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		const char face_order[6],
 		unsigned int reuse_texture_ID,
 		unsigned int flags
@@ -380,7 +380,7 @@ int
 		const char *filename,
 		int image_type,
 		int x, int y,
-		int width, int height
+		int _width, int _height
 	);
 
 /**
@@ -396,7 +396,7 @@ unsigned char*
 	SOIL_load_image
 	(
 		const char *filename,
-		int *width, int *height, int *channels,
+		int *_width, int *_height, int *channels,
 		int force_channels
 	);
 
@@ -414,7 +414,7 @@ unsigned char*
 	(
 		const unsigned char *const buffer,
 		int buffer_length,
-		int *width, int *height, int *channels,
+		int *_width, int *_height, int *channels,
 		int force_channels
 	);
 
@@ -428,7 +428,7 @@ int
 	(
 		const char *filename,
 		int image_type,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		const unsigned char *const data,
 		int quality
 	);
@@ -438,7 +438,7 @@ int
 	(
 		const char *filename,
 		int image_type,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		const unsigned char *const data
 	);
 
@@ -455,7 +455,7 @@ unsigned char*
 SOIL_write_image_to_memory_quality
 (
 	int image_type,
-	int width, int height, int channels,
+	int _width, int _height, int channels,
 	const unsigned char* const data,
 	int quality,
 	int* imageSize
@@ -465,7 +465,7 @@ unsigned char*
 SOIL_write_image_to_memory
 (
 	int image_type,
-	int width, int height, int channels,
+	int _width, int _height, int channels,
 	const unsigned char* const data,
 	int* imageSize
 );

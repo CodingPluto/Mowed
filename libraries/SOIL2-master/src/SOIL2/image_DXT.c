@@ -43,7 +43,7 @@ int
 	save_image_as_DDS
 	(
 		const char *filename,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		const unsigned char *const data
 	)
 {
@@ -54,7 +54,7 @@ int
 	int DDS_size;
 	/*	error check	*/
 	if( (NULL == filename) ||
-		(width < 1) || (height < 1) ||
+		(_width < 1) || (_height < 1) ||
 		(channels < 1) || (channels > 4) ||
 		(data == NULL ) )
 	{
@@ -64,19 +64,19 @@ int
 	if( (channels & 1) == 1 )
 	{
 		/*	no alpha, just use DXT1	*/
-		DDS_data = convert_image_to_DXT1( data, width, height, channels, &DDS_size );
+		DDS_data = convert_image_to_DXT1( data, _width, _height, channels, &DDS_size );
 	} else
 	{
 		/*	has alpha, so use DXT5	*/
-		DDS_data = convert_image_to_DXT5( data, width, height, channels, &DDS_size );
+		DDS_data = convert_image_to_DXT5( data, _width, _height, channels, &DDS_size );
 	}
 	/*	save it	*/
 	memset( &header, 0, sizeof( DDS_header ) );
 	header.dwMagic = ('D' << 0) | ('D' << 8) | ('S' << 16) | (' ' << 24);
 	header.dwSize = 124;
 	header.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT | DDSD_LINEARSIZE;
-	header.dwWidth = width;
-	header.dwHeight = height;
+	header.dwWidth = _width;
+	header.dwHeight = _height;
 	header.dwPitchOrLinearSize = DDS_size;
 	header.sPixelFormat.dwSize = 32;
 	header.sPixelFormat.dwFlags = DDPF_FOURCC;
@@ -100,7 +100,7 @@ int
 
 unsigned char* convert_image_to_DXT1(
 		const unsigned char *const uncompressed,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		int *out_size )
 {
 	unsigned char *compressed;
@@ -110,7 +110,7 @@ unsigned char* convert_image_to_DXT1(
 	int index = 0, chan_step = 1;
 	/*	error check	*/
 	*out_size = 0;
-	if( (width < 1) || (height < 1) ||
+	if( (_width < 1) || (_height < 1) ||
 		(NULL == uncompressed) ||
 		(channels < 1) || (channels > 4) )
 	{
@@ -123,31 +123,31 @@ unsigned char* convert_image_to_DXT1(
 	}
 	/*	get the RAM for the compressed image
 		(8 bytes per 4x4 pixel block)	*/
-	*out_size = ((width+3) >> 2) * ((height+3) >> 2) * 8;
+	*out_size = ((_width+3) >> 2) * ((_height+3) >> 2) * 8;
 	compressed = (unsigned char*)malloc( *out_size );
 	/*	go through each block	*/
-	for( j = 0; j < height; j += 4 )
+	for( j = 0; j < _height; j += 4 )
 	{
-		for( i = 0; i < width; i += 4 )
+		for( i = 0; i < _width; i += 4 )
 		{
 			/*	copy this block into a new one	*/
 			int idx = 0;
 			int mx = 4, my = 4;
-			if( j+4 >= height )
+			if( j+4 >= _height )
 			{
-				my = height - j;
+				my = _height - j;
 			}
-			if( i+4 >= width )
+			if( i+4 >= _width )
 			{
-				mx = width - i;
+				mx = _width - i;
 			}
 			for( y = 0; y < my; ++y )
 			{
 				for( x = 0; x < mx; ++x )
 				{
-					ublock[idx++] = uncompressed[(j+y)*width*channels+(i+x)*channels];
-					ublock[idx++] = uncompressed[(j+y)*width*channels+(i+x)*channels+chan_step];
-					ublock[idx++] = uncompressed[(j+y)*width*channels+(i+x)*channels+chan_step+chan_step];
+					ublock[idx++] = uncompressed[(j+y)*_width*channels+(i+x)*channels];
+					ublock[idx++] = uncompressed[(j+y)*_width*channels+(i+x)*channels+chan_step];
+					ublock[idx++] = uncompressed[(j+y)*_width*channels+(i+x)*channels+chan_step+chan_step];
 				}
 				for( x = mx; x < 4; ++x )
 				{
@@ -179,7 +179,7 @@ unsigned char* convert_image_to_DXT1(
 
 unsigned char* convert_image_to_DXT5(
 		const unsigned char *const uncompressed,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		int *out_size )
 {
 	unsigned char *compressed;
@@ -190,7 +190,7 @@ unsigned char* convert_image_to_DXT5(
 	int has_alpha;
 	/*	error check	*/
 	*out_size = 0;
-	if( (width < 1) || (height < 1) ||
+	if( (_width < 1) || (_height < 1) ||
 		(NULL == uncompressed) ||
 		(channels < 1) || ( channels > 4) )
 	{
@@ -205,33 +205,33 @@ unsigned char* convert_image_to_DXT5(
 	has_alpha = 1 - (channels & 1);
 	/*	get the RAM for the compressed image
 		(16 bytes per 4x4 pixel block)	*/
-	*out_size = ((width+3) >> 2) * ((height+3) >> 2) * 16;
+	*out_size = ((_width+3) >> 2) * ((_height+3) >> 2) * 16;
 	compressed = (unsigned char*)malloc( *out_size );
 	/*	go through each block	*/
-	for( j = 0; j < height; j += 4 )
+	for( j = 0; j < _height; j += 4 )
 	{
-		for( i = 0; i < width; i += 4 )
+		for( i = 0; i < _width; i += 4 )
 		{
 			/*	local variables, and my block counter	*/
 			int idx = 0;
 			int mx = 4, my = 4;
-			if( j+4 >= height )
+			if( j+4 >= _height )
 			{
-				my = height - j;
+				my = _height - j;
 			}
-			if( i+4 >= width )
+			if( i+4 >= _width )
 			{
-				mx = width - i;
+				mx = _width - i;
 			}
 			for( y = 0; y < my; ++y )
 			{
 				for( x = 0; x < mx; ++x )
 				{
-					ublock[idx++] = uncompressed[(j+y)*width*channels+(i+x)*channels];
-					ublock[idx++] = uncompressed[(j+y)*width*channels+(i+x)*channels+chan_step];
-					ublock[idx++] = uncompressed[(j+y)*width*channels+(i+x)*channels+chan_step+chan_step];
+					ublock[idx++] = uncompressed[(j+y)*_width*channels+(i+x)*channels];
+					ublock[idx++] = uncompressed[(j+y)*_width*channels+(i+x)*channels+chan_step];
+					ublock[idx++] = uncompressed[(j+y)*_width*channels+(i+x)*channels+chan_step+chan_step];
 					ublock[idx++] =
-						has_alpha * uncompressed[(j+y)*width*channels+(i+x)*channels+channels-1]
+						has_alpha * uncompressed[(j+y)*_width*channels+(i+x)*channels+channels-1]
 						+ (1-has_alpha)*255;
 				}
 				for( x = mx; x < 4; ++x )

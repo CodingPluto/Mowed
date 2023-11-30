@@ -78,7 +78,7 @@ int      stbi__pkm_test_callbacks      (stbi_io_callbacks const *clbk, void *use
 static int stbi__pkm_info(stbi__context *s, int *x, int *y, int *comp )
 {
 	PKMHeader header;
-	unsigned int width, height;
+	unsigned int _width, _height;
 
 	stbi__getn( s, (stbi_uc*)(&header), sizeof(PKMHeader) );
 
@@ -87,11 +87,11 @@ static int stbi__pkm_info(stbi__context *s, int *x, int *y, int *comp )
 		return 0;
 	}
 
-	width = (header.iWidthMSB << 8) | header.iWidthLSB;
-	height = (header.iHeightMSB << 8) | header.iHeightLSB;
+	_width = (header.iWidthMSB << 8) | header.iWidthLSB;
+	_height = (header.iHeightMSB << 8) | header.iHeightLSB;
 
-	*x = s->img_x = width;
-	*y = s->img_y = height;
+	*x = s->img_x = _width;
+	*y = s->img_y = _height;
 	*comp = s->img_n = 3;
 
 	stbi__rewind(s);
@@ -141,8 +141,8 @@ static void * stbi__pkm_load(stbi__context *s, int *x, int *y, int *comp, int re
 	stbi_uc *pkm_data = NULL;
 	stbi_uc *pkm_res_data = NULL;
 	PKMHeader header;
-	unsigned int width;
-	unsigned int height;
+	unsigned int _width;
+	unsigned int _height;
 	unsigned int compressed_size;
 
 	stbi__getn( s, (stbi_uc*)(&header), sizeof(PKMHeader) );
@@ -151,21 +151,21 @@ static void * stbi__pkm_load(stbi__context *s, int *x, int *y, int *comp, int re
 		return NULL;
 	}
 
-	width = (header.iWidthMSB << 8) | header.iWidthLSB;
-	height = (header.iHeightMSB << 8) | header.iHeightLSB;
+	_width = (header.iWidthMSB << 8) | header.iWidthLSB;
+	_height = (header.iHeightMSB << 8) | header.iHeightLSB;
 
-	*x = s->img_x = width;
-	*y = s->img_y = height;
+	*x = s->img_x = _width;
+	*y = s->img_y = _height;
 	*comp = s->img_n = 4;
 
-	compressed_size = (((width + 3) & ~3) * ((height + 3) & ~3)) >> 1;
+	compressed_size = (((_width + 3) & ~3) * ((_height + 3) & ~3)) >> 1;
 
 	pkm_data = (stbi_uc *)malloc(compressed_size);
 	stbi__getn( s, pkm_data, compressed_size );
 
-	pkm_res_data = (stbi_uc *)malloc(width * height * s->img_n);
+	pkm_res_data = (stbi_uc *)malloc(_width * _height * s->img_n);
 
-	wfETC1_DecodeImage(pkm_data, pkm_res_data, width, height);
+	wfETC1_DecodeImage(pkm_data, pkm_res_data, _width, _height);
 
 	free( pkm_data );
 

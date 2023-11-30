@@ -21,7 +21,7 @@ int
 save_image_as_DDS
 (
     const char *filename,
-    int width, int height, int channels,
+    int _width, int _height, int channels,
     const unsigned char *const data
 );
 
@@ -32,7 +32,7 @@ unsigned char*
 convert_image_to_DXT1
 (
     const unsigned char *const uncompressed,
-    int width, int height, int channels,
+    int _width, int _height, int channels,
     int *out_size
 );
 
@@ -43,7 +43,7 @@ unsigned char*
 convert_image_to_DXT5
 (
     const unsigned char *const uncompressed,
-    int width, int height, int channels,
+    int _width, int _height, int channels,
     int *out_size
 );
 

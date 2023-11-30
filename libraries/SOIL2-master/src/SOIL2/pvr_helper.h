@@ -9,8 +9,8 @@
 typedef struct
 {
 	unsigned int dwHeaderSize;			/*!< size of the structure */
-	unsigned int dwHeight;				/*!< height of surface to be created */
-	unsigned int dwWidth;				/*!< width of input surface */
+	unsigned int dwHeight;				/*!< _height of surface to be created */
+	unsigned int dwWidth;				/*!< _width of input surface */
 	unsigned int dwMipMapCount;			/*!< number of mip-map levels requested */
 	unsigned int dwpfFlags;				/*!< pixel format flags */
 	unsigned int dwTextureDataSize;		/*!< Total size in bytes */

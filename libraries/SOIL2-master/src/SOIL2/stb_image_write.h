@@ -674,19 +674,19 @@ static void stbiw__write_dump_data(stbi__write_context *s, int length, unsigned 
    s->func(s->context, data, length);
 }
 
-static void stbiw__write_hdr_scanline(stbi__write_context *s, int width, int ncomp, unsigned char *scratch, float *scanline)
+static void stbiw__write_hdr_scanline(stbi__write_context *s, int _width, int ncomp, unsigned char *scratch, float *scanline)
 {
    unsigned char scanlineheader[4] = { 2, 2, 0, 0 };
    unsigned char rgbe[4];
    float linear[3];
    int x;
 
-   scanlineheader[2] = (width&0xff00)>>8;
-   scanlineheader[3] = (width&0x00ff);
+   scanlineheader[2] = (_width&0xff00)>>8;
+   scanlineheader[3] = (_width&0x00ff);
 
    /* skip RLE for images too small or large */
-   if (width < 8 || width >= 32768) {
-      for (x=0; x < width; x++) {
+   if (_width < 8 || _width >= 32768) {
+      for (x=0; x < _width; x++) {
          switch (ncomp) {
             case 4: /* fallthrough */
             case 3: linear[2] = scanline[x*ncomp + 2];
@@ -703,7 +703,7 @@ static void stbiw__write_hdr_scanline(stbi__write_context *s, int width, int nco
    } else {
       int c,r;
       /* encode into scratch buffer */
-      for (x=0; x < width; x++) {
+      for (x=0; x < _width; x++) {
          switch(ncomp) {
             case 4: /* fallthrough */
             case 3: linear[2] = scanline[x*ncomp + 2];
@@ -715,29 +715,29 @@ static void stbiw__write_hdr_scanline(stbi__write_context *s, int width, int nco
                     break;
          }
          stbiw__linear_to_rgbe(rgbe, linear);
-         scratch[x + width*0] = rgbe[0];
-         scratch[x + width*1] = rgbe[1];
-         scratch[x + width*2] = rgbe[2];
-         scratch[x + width*3] = rgbe[3];
+         scratch[x + _width*0] = rgbe[0];
+         scratch[x + _width*1] = rgbe[1];
+         scratch[x + _width*2] = rgbe[2];
+         scratch[x + _width*3] = rgbe[3];
       }
 
       s->func(s->context, scanlineheader, 4);
 
       /* RLE each component separately */
       for (c=0; c < 4; c++) {
-         unsigned char *comp = &scratch[width*c];
+         unsigned char *comp = &scratch[_width*c];
 
          x = 0;
-         while (x < width) {
+         while (x < _width) {
             // find first run
             r = x;
-            while (r+2 < width) {
+            while (r+2 < _width) {
                if (comp[r] == comp[r+1] && comp[r] == comp[r+2])
                   break;
                ++r;
             }
-            if (r+2 >= width)
-               r = width;
+            if (r+2 >= _width)
+               r = _width;
             // dump up to first run
             while (x < r) {
                int len = r-x;
@@ -746,9 +746,9 @@ static void stbiw__write_hdr_scanline(stbi__write_context *s, int width, int nco
                x += len;
             }
             // if there's a run, output it
-            if (r+2 < width) { // same test as what we break out of in search loop, so only true if we break'd
+            if (r+2 < _width) { // same test as what we break out of in search loop, so only true if we break'd
                // find next byte after run
-               while (r < width && comp[r] == comp[x])
+               while (r < _width && comp[r] == comp[x])
                   ++r;
                // output run up to r
                while (x < r) {
@@ -1094,18 +1094,18 @@ static unsigned char stbiw__paeth(int a, int b, int c)
 }
 
 // @OPTIMIZE: provide an option that always forces left-predict or paeth predict
-static void stbiw__encode_png_line(unsigned char *pixels, int stride_bytes, int width, int height, int y, int n, int filter_type, signed char *line_buffer)
+static void stbiw__encode_png_line(unsigned char *pixels, int stride_bytes, int _width, int _height, int y, int n, int filter_type, signed char *line_buffer)
 {
    static int mapping[] = { 0,1,2,3,4 };
    static int firstmap[] = { 0,1,0,5,6 };
    int *mymap = (y != 0) ? mapping : firstmap;
    int i;
    int type = mymap[filter_type];
-   unsigned char *z = pixels + stride_bytes * (stbi__flip_vertically_on_write ? height-1-y : y);
+   unsigned char *z = pixels + stride_bytes * (stbi__flip_vertically_on_write ? _height-1-y : y);
    int signed_stride = stbi__flip_vertically_on_write ? -stride_bytes : stride_bytes;
 
    if (type==0) {
-      memcpy(line_buffer, z, width*n);
+      memcpy(line_buffer, z, _width*n);
       return;
    }
 
@@ -1121,12 +1121,12 @@ static void stbiw__encode_png_line(unsigned char *pixels, int stride_bytes, int 
       }
    }
    switch (type) {
-      case 1: for (i=n; i < width*n; ++i) line_buffer[i] = z[i] - z[i-n]; break;
-      case 2: for (i=n; i < width*n; ++i) line_buffer[i] = z[i] - z[i-signed_stride]; break;
-      case 3: for (i=n; i < width*n; ++i) line_buffer[i] = z[i] - ((z[i-n] + z[i-signed_stride])>>1); break;
-      case 4: for (i=n; i < width*n; ++i) line_buffer[i] = z[i] - stbiw__paeth(z[i-n], z[i-signed_stride], z[i-signed_stride-n]); break;
-      case 5: for (i=n; i < width*n; ++i) line_buffer[i] = z[i] - (z[i-n]>>1); break;
-      case 6: for (i=n; i < width*n; ++i) line_buffer[i] = z[i] - stbiw__paeth(z[i-n], 0,0); break;
+      case 1: for (i=n; i < _width*n; ++i) line_buffer[i] = z[i] - z[i-n]; break;
+      case 2: for (i=n; i < _width*n; ++i) line_buffer[i] = z[i] - z[i-signed_stride]; break;
+      case 3: for (i=n; i < _width*n; ++i) line_buffer[i] = z[i] - ((z[i-n] + z[i-signed_stride])>>1); break;
+      case 4: for (i=n; i < _width*n; ++i) line_buffer[i] = z[i] - stbiw__paeth(z[i-n], z[i-signed_stride], z[i-signed_stride-n]); break;
+      case 5: for (i=n; i < _width*n; ++i) line_buffer[i] = z[i] - (z[i-n]>>1); break;
+      case 6: for (i=n; i < _width*n; ++i) line_buffer[i] = z[i] - stbiw__paeth(z[i-n], 0,0); break;
    }
 }
 
@@ -1400,7 +1400,7 @@ static int stbiw__jpg_processDU(stbi__write_context *s, int *bitBuf, int *bitCnt
    return DU[0];
 }
 
-static int stbi_write_jpg_core(stbi__write_context *s, int width, int height, int comp, const void* data, int quality) {
+static int stbi_write_jpg_core(stbi__write_context *s, int _width, int _height, int comp, const void* data, int quality) {
    // Constants that don't pollute global namespace
    static const unsigned char std_dc_luminance_nrcodes[] = {0,0,1,5,1,1,1,1,1,1,0,0,0,0,0,0,0};
    static const unsigned char std_dc_luminance_values[] = {0,1,2,3,4,5,6,7,8,9,10,11};
@@ -1476,7 +1476,7 @@ static int stbi_write_jpg_core(stbi__write_context *s, int width, int height, in
    float fdtbl_Y[64], fdtbl_UV[64];
    unsigned char YTable[64], UVTable[64];
 
-   if(!data || !width || !height || comp > 4 || comp < 1) {
+   if(!data || !_width || !_height || comp > 4 || comp < 1) {
       return 0;
    }
 
@@ -1503,7 +1503,7 @@ static int stbi_write_jpg_core(stbi__write_context *s, int width, int height, in
    {
       static const unsigned char head0[] = { 0xFF,0xD8,0xFF,0xE0,0,0x10,'J','F','I','F',0,1,1,0,0,1,0,1,0,0,0xFF,0xDB,0,0x84,0 };
       static const unsigned char head2[] = { 0xFF,0xDA,0,0xC,3,1,0,2,0x11,3,0x11,0,0x3F,0 };
-      const unsigned char head1[] = { 0xFF,0xC0,0,0x11,8,(unsigned char)(height>>8),STBIW_UCHAR(height),(unsigned char)(width>>8),STBIW_UCHAR(width),
+      const unsigned char head1[] = { 0xFF,0xC0,0,0x11,8,(unsigned char)(_height>>8),STBIW_UCHAR(_height),(unsigned char)(_width>>8),STBIW_UCHAR(_width),
                                       3,1,(unsigned char)(subsample?0x22:0x11),0,2,0x11,1,3,0x11,1,0xFF,0xC4,0x01,0xA2,0 };
       s->func(s->context, (void*)head0, sizeof(head0));
       s->func(s->context, (void*)YTable, sizeof(YTable));
@@ -1536,16 +1536,16 @@ static int stbi_write_jpg_core(stbi__write_context *s, int width, int height, in
       const unsigned char *dataB = dataR + ofsB;
       int x, y, pos;
       if(subsample) {
-         for(y = 0; y < height; y += 16) {
-            for(x = 0; x < width; x += 16) {
+         for(y = 0; y < _height; y += 16) {
+            for(x = 0; x < _width; x += 16) {
                float Y[256], U[256], V[256];
                for(row = y, pos = 0; row < y+16; ++row) {
-                  // row >= height => use last input row
-                  int clamped_row = (row < height) ? row : height - 1;
-                  int base_p = (stbi__flip_vertically_on_write ? (height-1-clamped_row) : clamped_row)*width*comp;
+                  // row >= _height => use last input row
+                  int clamped_row = (row < _height) ? row : _height - 1;
+                  int base_p = (stbi__flip_vertically_on_write ? (_height-1-clamped_row) : clamped_row)*_width*comp;
                   for(col = x; col < x+16; ++col, ++pos) {
-                     // if col >= width => use pixel from last input column
-                     int p = base_p + ((col < width) ? col : (width-1))*comp;
+                     // if col >= _width => use pixel from last input column
+                     int p = base_p + ((col < _width) ? col : (_width-1))*comp;
                      float r = dataR[p], g = dataG[p], b = dataB[p];
                      Y[pos]= +0.29900f*r + 0.58700f*g + 0.11400f*b - 128;
                      U[pos]= -0.16874f*r - 0.33126f*g + 0.50000f*b;
@@ -1574,16 +1574,16 @@ static int stbi_write_jpg_core(stbi__write_context *s, int width, int height, in
             }
          }
       } else {
-         for(y = 0; y < height; y += 8) {
-            for(x = 0; x < width; x += 8) {
+         for(y = 0; y < _height; y += 8) {
+            for(x = 0; x < _width; x += 8) {
                float Y[64], U[64], V[64];
                for(row = y, pos = 0; row < y+8; ++row) {
-                  // row >= height => use last input row
-                  int clamped_row = (row < height) ? row : height - 1;
-                  int base_p = (stbi__flip_vertically_on_write ? (height-1-clamped_row) : clamped_row)*width*comp;
+                  // row >= _height => use last input row
+                  int clamped_row = (row < _height) ? row : _height - 1;
+                  int base_p = (stbi__flip_vertically_on_write ? (_height-1-clamped_row) : clamped_row)*_width*comp;
                   for(col = x; col < x+8; ++col, ++pos) {
-                     // if col >= width => use pixel from last input column
-                     int p = base_p + ((col < width) ? col : (width-1))*comp;
+                     // if col >= _width => use pixel from last input column
+                     int p = base_p + ((col < _width) ? col : (_width-1))*comp;
                      float r = dataR[p], g = dataG[p], b = dataB[p];
                      Y[pos]= +0.29900f*r + 0.58700f*g + 0.11400f*b - 128;
                      U[pos]= -0.16874f*r - 0.33126f*g + 0.50000f*b;

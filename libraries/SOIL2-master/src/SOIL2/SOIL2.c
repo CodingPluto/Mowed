@@ -173,7 +173,7 @@ int query_3Dc_capability( void );
 #define SOIL_GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT 0x8C4F
 static int has_sRGB_capability = SOIL_CAPABILITY_UNKNOWN;
 int query_sRGB_capability( void );
-typedef void (APIENTRY * P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC) (GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const GLvoid * data);
+typedef void (APIENTRY * P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC) (GLenum target, GLint level, GLenum internalformat, GLsizei _width, GLsizei _height, GLint border, GLsizei imageSize, const GLvoid * data);
 static P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC soilGlCompressedTexImage2D = NULL;
 
 typedef void (APIENTRY *P_SOIL_GLGENERATEMIPMAPPROC)(GLenum target);
@@ -399,7 +399,7 @@ unsigned int
 	SOIL_internal_create_OGL_texture
 	(
 		const unsigned char *const data,
-		int *width, int *height, int channels,
+		int *_width, int *_height, int channels,
 		unsigned int reuse_texture_ID,
 		unsigned int flags,
 		unsigned int opengl_texture_type,
@@ -419,7 +419,7 @@ unsigned int
 {
 	/*	variables	*/
 	unsigned char* img;
-	int width, height, channels;
+	int _width, _height, channels;
 	unsigned int tex_id;
 	/*	does the user want direct uploading of the image as a DDS file?	*/
 	if( flags & SOIL_FLAG_DDS_LOAD_DIRECT )
@@ -457,7 +457,7 @@ unsigned int
 	}
 
 	/*	try to load the image	*/
-	img = SOIL_load_image( filename, &width, &height, &channels, force_channels );
+	img = SOIL_load_image( filename, &_width, &_height, &channels, force_channels );
 	/*	channels holds the original number of channels, which may have been forced	*/
 	if( (force_channels >= 1) && (force_channels <= 4) )
 	{
@@ -471,7 +471,7 @@ unsigned int
 	}
 	/*	OK, make it a texture!	*/
 	tex_id = SOIL_internal_create_OGL_texture(
-			img, &width, &height, channels,
+			img, &_width, &_height, channels,
 			reuse_texture_ID, flags,
 			GL_TEXTURE_2D, GL_TEXTURE_2D,
 			GL_MAX_TEXTURE_SIZE );
@@ -493,7 +493,7 @@ unsigned int
 {
 	/*	variables	*/
 	unsigned char* img = NULL;
-	int width, height, channels;
+	int _width, _height, channels;
 	unsigned int tex_id;
 	/*	no direct uploading of the image as a DDS file	*/
 	/* error check */
@@ -509,7 +509,7 @@ unsigned int
 	if ( stbi_is_hdr( filename ) )
 	{
 		/*	try to load the image (only the HDR type) */
-		img = stbi_load( filename, &width, &height, &channels, 4 );
+		img = stbi_load( filename, &_width, &_height, &channels, 4 );
 	}
 
 	/*	channels holds the original number of channels, which may have been forced	*/
@@ -522,14 +522,14 @@ unsigned int
 	/* the load worked, do I need to convert it? */
 	if( fake_HDR_format == SOIL_HDR_RGBdivA )
 	{
-		RGBE_to_RGBdivA( img, width, height, rescale_to_max );
+		RGBE_to_RGBdivA( img, _width, _height, rescale_to_max );
 	} else if( fake_HDR_format == SOIL_HDR_RGBdivA2 )
 	{
-		RGBE_to_RGBdivA2( img, width, height, rescale_to_max );
+		RGBE_to_RGBdivA2( img, _width, _height, rescale_to_max );
 	}
 	/*	OK, make it a texture!	*/
 	tex_id = SOIL_internal_create_OGL_texture(
-			img, &width, &height, channels,
+			img, &_width, &_height, channels,
 			reuse_texture_ID, flags,
 			GL_TEXTURE_2D, GL_TEXTURE_2D,
 			GL_MAX_TEXTURE_SIZE );
@@ -551,7 +551,7 @@ unsigned int
 {
 	/*	variables	*/
 	unsigned char* img;
-	int width, height, channels;
+	int _width, _height, channels;
 	unsigned int tex_id;
 	/*	does the user want direct uploading of the image as a DDS file?	*/
 	if( flags & SOIL_FLAG_DDS_LOAD_DIRECT )
@@ -597,7 +597,7 @@ unsigned int
 	/*	try to load the image	*/
 	img = SOIL_load_image_from_memory(
 					buffer, buffer_length,
-					&width, &height, &channels,
+					&_width, &_height, &channels,
 					force_channels );
 	/*	channels holds the original number of channels, which may have been forced	*/
 	if( (force_channels >= 1) && (force_channels <= 4) )
@@ -612,7 +612,7 @@ unsigned int
 	}
 	/*	OK, make it a texture!	*/
 	tex_id = SOIL_internal_create_OGL_texture(
-			img, &width, &height, channels,
+			img, &_width, &_height, channels,
 			reuse_texture_ID, flags,
 			GL_TEXTURE_2D, GL_TEXTURE_2D,
 			GL_MAX_TEXTURE_SIZE );
@@ -638,7 +638,7 @@ unsigned int
 {
 	/*	variables	*/
 	unsigned char* img;
-	int width, height, channels;
+	int _width, _height, channels;
 	unsigned int tex_id;
 	/*	error checking	*/
 	if( (x_pos_file == NULL) ||
@@ -658,7 +658,7 @@ unsigned int
 		return 0;
 	}
 	/*	1st face: try to load the image	*/
-	img = SOIL_load_image( x_pos_file, &width, &height, &channels, force_channels );
+	img = SOIL_load_image( x_pos_file, &_width, &_height, &channels, force_channels );
 	/*	channels holds the original number of channels, which may have been forced	*/
 	if( (force_channels >= 1) && (force_channels <= 4) )
 	{
@@ -672,7 +672,7 @@ unsigned int
 	}
 	/*	upload the texture, and create a texture ID if necessary	*/
 	tex_id = SOIL_internal_create_OGL_texture(
-			img, &width, &height, channels,
+			img, &_width, &_height, channels,
 			reuse_texture_ID, flags,
 			SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_POSITIVE_X,
 			SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -682,7 +682,7 @@ unsigned int
 	if( tex_id != 0 )
 	{
 		/*	1st face: try to load the image	*/
-		img = SOIL_load_image( x_neg_file, &width, &height, &channels, force_channels );
+		img = SOIL_load_image( x_neg_file, &_width, &_height, &channels, force_channels );
 		/*	channels holds the original number of channels, which may have been forced	*/
 		if( (force_channels >= 1) && (force_channels <= 4) )
 		{
@@ -696,7 +696,7 @@ unsigned int
 		}
 		/*	upload the texture, but reuse the assigned texture ID	*/
 		tex_id = SOIL_internal_create_OGL_texture(
-				img, &width, &height, channels,
+				img, &_width, &_height, channels,
 				tex_id, flags,
 				SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_NEGATIVE_X,
 				SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -707,7 +707,7 @@ unsigned int
 	if( tex_id != 0 )
 	{
 		/*	1st face: try to load the image	*/
-		img = SOIL_load_image( y_pos_file, &width, &height, &channels, force_channels );
+		img = SOIL_load_image( y_pos_file, &_width, &_height, &channels, force_channels );
 		/*	channels holds the original number of channels, which may have been forced	*/
 		if( (force_channels >= 1) && (force_channels <= 4) )
 		{
@@ -721,7 +721,7 @@ unsigned int
 		}
 		/*	upload the texture, but reuse the assigned texture ID	*/
 		tex_id = SOIL_internal_create_OGL_texture(
-				img, &width, &height, channels,
+				img, &_width, &_height, channels,
 				tex_id, flags,
 				SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_POSITIVE_Y,
 				SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -732,7 +732,7 @@ unsigned int
 	if( tex_id != 0 )
 	{
 		/*	1st face: try to load the image	*/
-		img = SOIL_load_image( y_neg_file, &width, &height, &channels, force_channels );
+		img = SOIL_load_image( y_neg_file, &_width, &_height, &channels, force_channels );
 		/*	channels holds the original number of channels, which may have been forced	*/
 		if( (force_channels >= 1) && (force_channels <= 4) )
 		{
@@ -746,7 +746,7 @@ unsigned int
 		}
 		/*	upload the texture, but reuse the assigned texture ID	*/
 		tex_id = SOIL_internal_create_OGL_texture(
-				img, &width, &height, channels,
+				img, &_width, &_height, channels,
 				tex_id, flags,
 				SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
 				SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -757,7 +757,7 @@ unsigned int
 	if( tex_id != 0 )
 	{
 		/*	1st face: try to load the image	*/
-		img = SOIL_load_image( z_pos_file, &width, &height, &channels, force_channels );
+		img = SOIL_load_image( z_pos_file, &_width, &_height, &channels, force_channels );
 		/*	channels holds the original number of channels, which may have been forced	*/
 		if( (force_channels >= 1) && (force_channels <= 4) )
 		{
@@ -771,7 +771,7 @@ unsigned int
 		}
 		/*	upload the texture, but reuse the assigned texture ID	*/
 		tex_id = SOIL_internal_create_OGL_texture(
-				img, &width, &height, channels,
+				img, &_width, &_height, channels,
 				tex_id, flags,
 				SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 				SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -782,7 +782,7 @@ unsigned int
 	if( tex_id != 0 )
 	{
 		/*	1st face: try to load the image	*/
-		img = SOIL_load_image( z_neg_file, &width, &height, &channels, force_channels );
+		img = SOIL_load_image( z_neg_file, &_width, &_height, &channels, force_channels );
 		/*	channels holds the original number of channels, which may have been forced	*/
 		if( (force_channels >= 1) && (force_channels <= 4) )
 		{
@@ -796,7 +796,7 @@ unsigned int
 		}
 		/*	upload the texture, but reuse the assigned texture ID	*/
 		tex_id = SOIL_internal_create_OGL_texture(
-				img, &width, &height, channels,
+				img, &_width, &_height, channels,
 				tex_id, flags,
 				SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
 				SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -829,7 +829,7 @@ unsigned int
 {
 	/*	variables	*/
 	unsigned char* img;
-	int width, height, channels;
+	int _width, _height, channels;
 	unsigned int tex_id;
 	/*	error checking	*/
 	if( (x_pos_buffer == NULL) ||
@@ -851,7 +851,7 @@ unsigned int
 	/*	1st face: try to load the image	*/
 	img = SOIL_load_image_from_memory(
 			x_pos_buffer, x_pos_buffer_length,
-			&width, &height, &channels, force_channels );
+			&_width, &_height, &channels, force_channels );
 	/*	channels holds the original number of channels, which may have been forced	*/
 	if( (force_channels >= 1) && (force_channels <= 4) )
 	{
@@ -865,7 +865,7 @@ unsigned int
 	}
 	/*	upload the texture, and create a texture ID if necessary	*/
 	tex_id = SOIL_internal_create_OGL_texture(
-			img, &width, &height, channels,
+			img, &_width, &_height, channels,
 			reuse_texture_ID, flags,
 			SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_POSITIVE_X,
 			SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -877,7 +877,7 @@ unsigned int
 		/*	1st face: try to load the image	*/
 		img = SOIL_load_image_from_memory(
 				x_neg_buffer, x_neg_buffer_length,
-				&width, &height, &channels, force_channels );
+				&_width, &_height, &channels, force_channels );
 		/*	channels holds the original number of channels, which may have been forced	*/
 		if( (force_channels >= 1) && (force_channels <= 4) )
 		{
@@ -891,7 +891,7 @@ unsigned int
 		}
 		/*	upload the texture, but reuse the assigned texture ID	*/
 		tex_id = SOIL_internal_create_OGL_texture(
-				img, &width, &height, channels,
+				img, &_width, &_height, channels,
 				tex_id, flags,
 				SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_NEGATIVE_X,
 				SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -904,7 +904,7 @@ unsigned int
 		/*	1st face: try to load the image	*/
 		img = SOIL_load_image_from_memory(
 				y_pos_buffer, y_pos_buffer_length,
-				&width, &height, &channels, force_channels );
+				&_width, &_height, &channels, force_channels );
 		/*	channels holds the original number of channels, which may have been forced	*/
 		if( (force_channels >= 1) && (force_channels <= 4) )
 		{
@@ -918,7 +918,7 @@ unsigned int
 		}
 		/*	upload the texture, but reuse the assigned texture ID	*/
 		tex_id = SOIL_internal_create_OGL_texture(
-				img, &width, &height, channels,
+				img, &_width, &_height, channels,
 				tex_id, flags,
 				SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_POSITIVE_Y,
 				SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -931,7 +931,7 @@ unsigned int
 		/*	1st face: try to load the image	*/
 		img = SOIL_load_image_from_memory(
 				y_neg_buffer, y_neg_buffer_length,
-				&width, &height, &channels, force_channels );
+				&_width, &_height, &channels, force_channels );
 		/*	channels holds the original number of channels, which may have been forced	*/
 		if( (force_channels >= 1) && (force_channels <= 4) )
 		{
@@ -945,7 +945,7 @@ unsigned int
 		}
 		/*	upload the texture, but reuse the assigned texture ID	*/
 		tex_id = SOIL_internal_create_OGL_texture(
-				img, &width, &height, channels,
+				img, &_width, &_height, channels,
 				tex_id, flags,
 				SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
 				SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -958,7 +958,7 @@ unsigned int
 		/*	1st face: try to load the image	*/
 		img = SOIL_load_image_from_memory(
 				z_pos_buffer, z_pos_buffer_length,
-				&width, &height, &channels, force_channels );
+				&_width, &_height, &channels, force_channels );
 		/*	channels holds the original number of channels, which may have been forced	*/
 		if( (force_channels >= 1) && (force_channels <= 4) )
 		{
@@ -972,7 +972,7 @@ unsigned int
 		}
 		/*	upload the texture, but reuse the assigned texture ID	*/
 		tex_id = SOIL_internal_create_OGL_texture(
-				img, &width, &height, channels,
+				img, &_width, &_height, channels,
 				tex_id, flags,
 				SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 				SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -985,7 +985,7 @@ unsigned int
 		/*	1st face: try to load the image	*/
 		img = SOIL_load_image_from_memory(
 				z_neg_buffer, z_neg_buffer_length,
-				&width, &height, &channels, force_channels );
+				&_width, &_height, &channels, force_channels );
 		/*	channels holds the original number of channels, which may have been forced	*/
 		if( (force_channels >= 1) && (force_channels <= 4) )
 		{
@@ -999,7 +999,7 @@ unsigned int
 		}
 		/*	upload the texture, but reuse the assigned texture ID	*/
 		tex_id = SOIL_internal_create_OGL_texture(
-				img, &width, &height, channels,
+				img, &_width, &_height, channels,
 				tex_id, flags,
 				SOIL_TEXTURE_CUBE_MAP, SOIL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
 				SOIL_MAX_CUBE_MAP_TEXTURE_SIZE );
@@ -1022,7 +1022,7 @@ unsigned int
 {
 	/*	variables	*/
 	unsigned char* img;
-	int width, height, channels, i;
+	int _width, _height, channels, i;
 	unsigned int tex_id = 0;
 	/*	error checking	*/
 	if( filename == NULL )
@@ -1081,7 +1081,7 @@ unsigned int
 		return 0;
 	}
 	/*	1st off, try to load the full image	*/
-	img = SOIL_load_image( filename, &width, &height, &channels, force_channels );
+	img = SOIL_load_image( filename, &_width, &_height, &channels, force_channels );
 	/*	channels holds the original number of channels, which may have been forced	*/
 	if( (force_channels >= 1) && (force_channels <= 4) )
 	{
@@ -1094,8 +1094,8 @@ unsigned int
 		return 0;
 	}
 	/*	now, does this image have the right dimensions?	*/
-	if( (width != 6*height) &&
-		(6*width != height) )
+	if( (_width != 6*_height) &&
+		(6*_width != _height) )
 	{
 		SOIL_free_image_data( img );
 		result_string_pointer = "Single cubemap image must have a 6:1 ratio";
@@ -1103,7 +1103,7 @@ unsigned int
 	}
 	/*	try the image split and create	*/
 	tex_id = SOIL_create_OGL_single_cubemap(
-			img, width, height, channels,
+			img, _width, _height, channels,
 			face_order, reuse_texture_ID, flags
 			);
 	/*	nuke the temporary image data and return the texture handle	*/
@@ -1124,7 +1124,7 @@ unsigned int
 {
 	/*	variables	*/
 	unsigned char* img;
-	int width, height, channels, i;
+	int _width, _height, channels, i;
 	unsigned int tex_id = 0;
 	/*	error checking	*/
 	if( buffer == NULL )
@@ -1189,7 +1189,7 @@ unsigned int
 	/*	1st off, try to load the full image	*/
 	img = SOIL_load_image_from_memory(
 			buffer, buffer_length,
-			&width, &height, &channels,
+			&_width, &_height, &channels,
 			force_channels );
 	/*	channels holds the original number of channels, which may have been forced	*/
 	if( (force_channels >= 1) && (force_channels <= 4) )
@@ -1203,8 +1203,8 @@ unsigned int
 		return 0;
 	}
 	/*	now, does this image have the right dimensions?	*/
-	if( (width != 6*height) &&
-		(6*width != height) )
+	if( (_width != 6*_height) &&
+		(6*_width != _height) )
 	{
 		SOIL_free_image_data( img );
 		result_string_pointer = "Single cubemap image must have a 6:1 ratio";
@@ -1212,7 +1212,7 @@ unsigned int
 	}
 	/*	try the image split and create	*/
 	tex_id = SOIL_create_OGL_single_cubemap(
-			img, width, height, channels,
+			img, _width, _height, channels,
 			face_order, reuse_texture_ID, flags
 			);
 	/*	nuke the temporary image data and return the texture handle	*/
@@ -1224,7 +1224,7 @@ unsigned int
 	SOIL_create_OGL_single_cubemap
 	(
 		const unsigned char *const data,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		const char face_order[6],
 		unsigned int reuse_texture_ID,
 		unsigned int flags
@@ -1261,21 +1261,21 @@ unsigned int
 		return 0;
 	}
 	/*	now, does this image have the right dimensions?	*/
-	if( (width != 6*height) &&
-		(6*width != height) )
+	if( (_width != 6*_height) &&
+		(6*_width != _height) )
 	{
 		result_string_pointer = "Single cubemap image must have a 6:1 ratio";
 		return 0;
 	}
 	/*	which way am I stepping?	*/
-	if( width > height )
+	if( _width > _height )
 	{
-		dw = height;
+		dw = _height;
 		dh = 0;
 	} else
 	{
 		dw = 0;
-		dh = width;
+		dh = _width;
 	}
 	sz = dw+dh;
 	sub_img = (unsigned char *)malloc( sz*sz*channels );
@@ -1290,7 +1290,7 @@ unsigned int
 		{
 			for( x = i*dw*channels; x < (i*dw+sz)*channels; ++x )
 			{
-				sub_img[idx++] = data[y*width*channels+x];
+				sub_img[idx++] = data[y*_width*channels+x];
 			}
 		}
 		/*	what is my texture target?
@@ -1335,14 +1335,14 @@ unsigned int
 	SOIL_create_OGL_texture
 	(
 		const unsigned char *const data,
-		int *width, int *height, int channels,
+		int *_width, int *_height, int channels,
 		unsigned int reuse_texture_ID,
 		unsigned int flags
 	)
 {
 	/*	wrapper function for 2D textures	*/
 	return SOIL_internal_create_OGL_texture(
-				data, width, height, channels,
+				data, _width, _height, channels,
 				reuse_texture_ID, flags,
 				GL_TEXTURE_2D, GL_TEXTURE_2D,
 				GL_MAX_TEXTURE_SIZE );
@@ -1367,7 +1367,7 @@ void check_for_GL_errors( const char *calling_location )
 #endif
 
 static void createMipmaps(const unsigned char *const img,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		unsigned int flags,
 		unsigned int opengl_texture_target,
 		unsigned int internal_texture_format,
@@ -1381,15 +1381,15 @@ static void createMipmaps(const unsigned char *const img,
 	else
 	{
 		int MIPlevel = 1;
-		int MIPwidth = (width+1) / 2;
-		int MIPheight = (height+1) / 2;
+		int MIPwidth = (_width+1) / 2;
+		int MIPheight = (_height+1) / 2;
 		unsigned char *resampled = (unsigned char*)malloc( channels*MIPwidth*MIPheight );
 
-		while( ((1<<MIPlevel) <= width) || ((1<<MIPlevel) <= height) )
+		while( ((1<<MIPlevel) <= _width) || ((1<<MIPlevel) <= _height) )
 		{
 			/*	do this MIPmap level	*/
 			mipmap_image(
-					img, width, height, channels,
+					img, _width, _height, channels,
 					resampled,
 					(1 << MIPlevel), (1 << MIPlevel) );
 
@@ -1450,7 +1450,7 @@ unsigned int
 	SOIL_internal_create_OGL_texture
 	(
 		const unsigned char *const data,
-		int *width, int *height, int channels,
+		int *_width, int *_height, int channels,
 		unsigned int reuse_texture_ID,
 		unsigned int flags,
 		unsigned int opengl_texture_type,
@@ -1465,8 +1465,8 @@ unsigned int
 	int DXT_mode = SOIL_CAPABILITY_UNKNOWN;
 	int sRGB_texture = query_sRGB_capability() == SOIL_CAPABILITY_PRESENT && ( flags & SOIL_FLAG_SRGB_COLOR_SPACE );;
 	int max_supported_size;
-	int iwidth = *width;
-	int iheight = *height;
+	int iwidth = *_width;
+	int iheight = *_height;
 	int needCopy;
 	GLint unpack_aligment;
 
@@ -1607,8 +1607,8 @@ unsigned int
 			/*	nuke the old guy ( if a copy exists ), then point it at the new guy	*/
 			SOIL_free_image_data( img );
 			img = resampled;
-			*width = new_width;
-			*height = new_height;
+			*_width = new_width;
+			*_height = new_height;
 			iwidth = new_width;
 			iheight = new_height;
 		}
@@ -1638,8 +1638,8 @@ unsigned int
 		/*	nuke the old guy, then point it at the new guy	*/
 		SOIL_free_image_data( img );
 		img = resampled;
-		*width = new_width;
-		*height = new_height;
+		*_width = new_width;
+		*_height = new_height;
 		iwidth = new_width;
 		iheight = new_height;
 	}
@@ -1831,7 +1831,7 @@ int
 		const char *filename,
 		int image_type,
 		int x, int y,
-		int width, int height
+		int _width, int _height
 	)
 {
 	unsigned char *pixel_data;
@@ -1840,7 +1840,7 @@ int
 	GLint pack_aligment;
 
 	/*	error checks	*/
-	if( (width < 1) || (height < 1) )
+	if( (_width < 1) || (_height < 1) )
 	{
 		result_string_pointer = "Invalid screenshot dimensions";
 		return 0;
@@ -1863,8 +1863,8 @@ int
 	}
 
 	/*  Get the data from OpenGL	*/
-	pixel_data = (unsigned char*)malloc( 3*width*height );
-	glReadPixels (x, y, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixel_data);
+	pixel_data = (unsigned char*)malloc( 3*_width*_height );
+	glReadPixels (x, y, _width, _height, GL_RGB, GL_UNSIGNED_BYTE, pixel_data);
 
 	if ( 1 != pack_aligment )
 	{
@@ -1872,11 +1872,11 @@ int
 	}
 
 	/*	invert the image	*/
-	for( j = 0; j*2 < height; ++j )
+	for( j = 0; j*2 < _height; ++j )
 	{
-		int index1 = j * width * 3;
-		int index2 = (height - 1 - j) * width * 3;
-		for( i = width * 3; i > 0; --i )
+		int index1 = j * _width * 3;
+		int index2 = (_height - 1 - j) * _width * 3;
+		for( i = _width * 3; i > 0; --i )
 		{
 			unsigned char temp = pixel_data[index1];
 			pixel_data[index1] = pixel_data[index2];
@@ -1887,7 +1887,7 @@ int
 	}
 
 	/*	save the image	*/
-	save_result = SOIL_save_image( filename, image_type, width, height, 3, pixel_data);
+	save_result = SOIL_save_image( filename, image_type, _width, _height, 3, pixel_data);
 
 	/*	And free the memory	*/
 	SOIL_free_image_data( pixel_data );
@@ -1898,12 +1898,12 @@ unsigned char*
 	SOIL_load_image
 	(
 		const char *filename,
-		int *width, int *height, int *channels,
+		int *_width, int *_height, int *channels,
 		int force_channels
 	)
 {
 	unsigned char *result = stbi_load( filename,
-			width, height, channels, force_channels );
+			_width, _height, channels, force_channels );
 	if( result == NULL )
 	{
 		result_string_pointer = stbi_failure_reason();
@@ -1919,13 +1919,13 @@ unsigned char*
 	(
 		const unsigned char *const buffer,
 		int buffer_length,
-		int *width, int *height, int *channels,
+		int *_width, int *_height, int *channels,
 		int force_channels
 	)
 {
 	unsigned char *result = stbi_load_from_memory(
 				buffer, buffer_length,
-				width, height, channels,
+				_width, _height, channels,
 				force_channels );
 	if( result == NULL )
 	{
@@ -1943,11 +1943,11 @@ int
 	(
 		const char *filename,
 		int image_type,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		const unsigned char *const data
 	)
 {
-	return SOIL_save_image_quality( filename, image_type, width, height, channels, data, 80 );
+	return SOIL_save_image_quality( filename, image_type, _width, _height, channels, data, 80 );
 }
 
 int
@@ -1955,7 +1955,7 @@ int
 	(
 		const char *filename,
 		int image_type,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		const unsigned char *const data,
 		int quality
 	)
@@ -1963,7 +1963,7 @@ int
 	int save_result;
 
 	/*	error check	*/
-	if( (width < 1) || (height < 1) ||
+	if( (_width < 1) || (_height < 1) ||
 		(channels < 1) || (channels > 4) ||
 		(data == NULL) ||
 		(filename == NULL) )
@@ -1973,30 +1973,30 @@ int
 	if( image_type == SOIL_SAVE_TYPE_BMP )
 	{
 		save_result = stbi_write_bmp( filename,
-				width, height, channels, (const void*)data );
+				_width, _height, channels, (const void*)data );
 	} else
 	if( image_type == SOIL_SAVE_TYPE_TGA )
 	{
 		save_result = stbi_write_tga( filename,
-				width, height, channels, (const void*)data );
+				_width, _height, channels, (const void*)data );
 	} else
 	if( image_type == SOIL_SAVE_TYPE_DDS )
 	{
 		save_result = save_image_as_DDS( filename,
-				width, height, channels, (const unsigned char *const)data );
+				_width, _height, channels, (const unsigned char *const)data );
 	} else
 	if( image_type == SOIL_SAVE_TYPE_PNG )
 	{
 		save_result = stbi_write_png( filename,
-				width, height, channels, (const void*)data, 0 );
+				_width, _height, channels, (const void*)data, 0 );
 	} else
 	if ( image_type == SOIL_SAVE_TYPE_JPG )
 	{
-		save_result = stbi_write_jpg( filename, width, height, channels, (const void*)data, quality );
+		save_result = stbi_write_jpg( filename, _width, _height, channels, (const void*)data, quality );
 	} else
 	if ( image_type == SOIL_SAVE_TYPE_QOI )
 	{
-		save_result = stbi_write_qoi( filename, width, height, channels, (const void*)data );
+		save_result = stbi_write_qoi( filename, _width, _height, channels, (const void*)data );
 	}
 	else
 	{
@@ -2078,7 +2078,7 @@ unsigned char*
 SOIL_write_image_to_memory_quality
 (
 	int image_type,
-	int width, int height, int channels,
+	int _width, int _height, int channels,
 	const unsigned char* const data,
 	int quality,
 	int* imageSize
@@ -2087,7 +2087,7 @@ SOIL_write_image_to_memory_quality
 	int save_result;
 
 	/*	error check	*/
-	if ((width < 1) || (height < 1) ||
+	if ((_width < 1) || (_height < 1) ||
 		(channels < 1) || (channels > 4) ||
 		(data == NULL) ||
 		(imageSize == NULL)
@@ -2107,11 +2107,11 @@ SOIL_write_image_to_memory_quality
 
 	if (image_type == SOIL_SAVE_TYPE_BMP)
 	{
-		save_result = stbi_write_bmp_to_func(write_to_memory, &context, width, height, channels, (const unsigned char*)data);
+		save_result = stbi_write_bmp_to_func(write_to_memory, &context, _width, _height, channels, (const unsigned char*)data);
 	}
 	else if (image_type == SOIL_SAVE_TYPE_TGA)
 	{
-		save_result = stbi_write_tga_to_func(write_to_memory, &context, width, height, channels, (const unsigned char*)data);
+		save_result = stbi_write_tga_to_func(write_to_memory, &context, _width, _height, channels, (const unsigned char*)data);
 	}
 	else if (image_type == SOIL_SAVE_TYPE_DDS)
 	{
@@ -2119,11 +2119,11 @@ SOIL_write_image_to_memory_quality
 	}
 	else if (image_type == SOIL_SAVE_TYPE_PNG)
 	{
-		save_result = stbi_write_png_to_func(write_to_memory, &context, width, height, channels, (const unsigned char*)data, 0);
+		save_result = stbi_write_png_to_func(write_to_memory, &context, _width, _height, channels, (const unsigned char*)data, 0);
 	}
 	else if (image_type == SOIL_SAVE_TYPE_JPG)
 	{
-		save_result = stbi_write_jpg_to_func(write_to_memory, &context, width, height, channels, (const unsigned char*)data, quality);
+		save_result = stbi_write_jpg_to_func(write_to_memory, &context, _width, _height, channels, (const unsigned char*)data, quality);
 	}
 	else
 	{
@@ -2158,12 +2158,12 @@ unsigned char*
 SOIL_write_image_to_memory
 (
 	int image_type,
-	int width, int height, int channels,
+	int _width, int _height, int channels,
 	const unsigned char* const data,
 	int* imageSize
 )
 {
-	return SOIL_write_image_to_memory_quality(image_type, width, height, channels, data, 80, imageSize);
+	return SOIL_write_image_to_memory_quality(image_type, _width, _height, channels, data, 80, imageSize);
 }
 
 void
@@ -2285,8 +2285,8 @@ unsigned int SOIL_direct_load_DDS_from_memory(
 	/*	OK, validated the header, let's load the image data	*/
 	result_string_pointer = "DDS header loaded and validated";
 
-	const int width = header.dwWidth;
-	const int height = header.dwHeight;
+	const int _width = header.dwWidth;
+	const int _height = header.dwHeight;
 	int uncompressed = 1 - ( header.sPixelFormat.dwFlags & DDPF_FOURCC ) / DDPF_FOURCC;
 	int cubemap = ( header.sCaps.dwCaps2 & DDSCAPS2_CUBEMAP ) / DDSCAPS2_CUBEMAP;
 	if( uncompressed )
@@ -2348,7 +2348,7 @@ unsigned int SOIL_direct_load_DDS_from_memory(
 				block_size = 4;
 			}
 		}
-		DDS_main_size = width * height * block_size;
+		DDS_main_size = _width * _height * block_size;
 	}
 	else
 	{
@@ -2398,7 +2398,7 @@ unsigned int SOIL_direct_load_DDS_from_memory(
 			internal_format = SOIL_COMPRESSED_RG_RGTC2;
 			break;
 		}
-		DDS_main_size = ( ( width + 3 ) >> 2 ) * ( ( height + 3 ) >> 2 ) * block_size;
+		DDS_main_size = ( ( _width + 3 ) >> 2 ) * ( ( _height + 3 ) >> 2 ) * block_size;
 	}
 
 	if( cubemap )
@@ -2442,8 +2442,8 @@ unsigned int SOIL_direct_load_DDS_from_memory(
 
 		for( int i = 1; i <= mipmaps; ++i )
 		{
-			int w = width >> i;
-			int h = height >> i;
+			int w = _width >> i;
+			int h = _height >> i;
 			if( w < 1 ) { w = 1; }
 			if( h < 1 ) { h = 1; }
 			if( uncompressed )
@@ -2525,18 +2525,18 @@ unsigned int SOIL_direct_load_DDS_from_memory(
 						DDS_data[i + 1] = ( pixel_new >> 8 ) & 0xff;
 					}
 				}
-				glTexImage2D( cf_target, 0, internal_format, width, height, 0, internal_format, format_type, DDS_data );
+				glTexImage2D( cf_target, 0, internal_format, _width, _height, 0, internal_format, format_type, DDS_data );
 			}
 			else
 			{
-				soilGlCompressedTexImage2D( cf_target, 0, internal_format, width, height, 0, DDS_main_size, DDS_data );
+				soilGlCompressedTexImage2D( cf_target, 0, internal_format, _width, _height, 0, DDS_main_size, DDS_data );
 			}
 			/*	upload the mipmaps, if we have them	*/
 			for( int i = 1; i <= mipmaps; ++i )
 			{
 				int w, h, mip_size;
-				w = width >> i;
-				h = height >> i;
+				w = _width >> i;
+				h = _height >> i;
 				if( w < 1 ) { w = 1; }
 				if( h < 1 ) { h = 1; }
 				/*	upload this mipmap	*/
@@ -2822,12 +2822,12 @@ unsigned int SOIL_direct_load_PVR_from_memory(
 		char *texture_ptr = (char*)buffer + header->dwHeaderSize + header->dwTextureDataSize * i;
 		char *cur_texture_ptr = 0;
 		int	mipmap_level;
-		unsigned int width= header->dwWidth, height = header->dwHeight;
+		unsigned int _width= header->dwWidth, _height = header->dwHeight;
 		unsigned int compressed_image_size = 0;
 
 		mipmaps = ( ( flags & SOIL_FLAG_MIPMAPS ) && (header->dwpfFlags & PVRTEX_MIPMAP) ) ? header->dwMipMapCount : 0;
 
-		for(mipmap_level = 0; mipmap_level <= mipmaps; width = _MAX(width/2, (unsigned int)1), height = _MAX(height/2, (unsigned int)1), mipmap_level++ ) {
+		for(mipmap_level = 0; mipmap_level <= mipmaps; _width = _MAX(_width/2, (unsigned int)1), _height = _MAX(_height/2, (unsigned int)1), mipmap_level++ ) {
 			// Do Alpha-swap if needed
 			cur_texture_ptr = texture_ptr;
 
@@ -2836,17 +2836,17 @@ unsigned int SOIL_direct_load_PVR_from_memory(
 			if( is_compressed_format ) {
 				/* Calculate how many bytes this MIP level occupies */
 				if ((header->dwpfFlags & PVRTEX_PIXELTYPE)==OGL_PVRTC2) {
-					compressed_image_size = ( _MAX(width, PVRTC2_MIN_TEXWIDTH) * _MAX(height, PVRTC2_MIN_TEXHEIGHT) * header->dwBitCount + 7 ) / 8;
+					compressed_image_size = ( _MAX(_width, PVRTC2_MIN_TEXWIDTH) * _MAX(_height, PVRTC2_MIN_TEXHEIGHT) * header->dwBitCount + 7 ) / 8;
 				} else {// PVRTC4 case
-					compressed_image_size = ( _MAX(width, PVRTC4_MIN_TEXWIDTH) * _MAX(height, PVRTC4_MIN_TEXHEIGHT) * header->dwBitCount + 7 ) / 8;
+					compressed_image_size = ( _MAX(_width, PVRTC4_MIN_TEXWIDTH) * _MAX(_height, PVRTC4_MIN_TEXHEIGHT) * header->dwBitCount + 7 ) / 8;
 				}
 
 				if ( is_compressed_format_supported ) {
 					/* Load compressed texture data at selected MIP level */
 					if ( loading_as_cubemap ) {
-						soilGlCompressedTexImage2D( SOIL_TEXTURE_CUBE_MAP_POSITIVE_X + i, mipmap_level, PVR_format, width, height, 0, compressed_image_size, cur_texture_ptr );
+						soilGlCompressedTexImage2D( SOIL_TEXTURE_CUBE_MAP_POSITIVE_X + i, mipmap_level, PVR_format, _width, _height, 0, compressed_image_size, cur_texture_ptr );
 					} else {
-						soilGlCompressedTexImage2D( opengl_texture_type, mipmap_level, PVR_format, width, height, 0, compressed_image_size, cur_texture_ptr );
+						soilGlCompressedTexImage2D( opengl_texture_type, mipmap_level, PVR_format, _width, _height, 0, compressed_image_size, cur_texture_ptr );
 					}
 				} else {
 					result_string_pointer = "failed: GPU doesnt support compressed textures";
@@ -2854,9 +2854,9 @@ unsigned int SOIL_direct_load_PVR_from_memory(
 			} else {
 				/* Load uncompressed texture data at selected MIP level */
 				if ( loading_as_cubemap ) {
-					glTexImage2D( SOIL_TEXTURE_CUBE_MAP_POSITIVE_X + i, mipmap_level, PVR_type, width, height, 0, PVR_type, PVR_format, cur_texture_ptr );
+					glTexImage2D( SOIL_TEXTURE_CUBE_MAP_POSITIVE_X + i, mipmap_level, PVR_type, _width, _height, 0, PVR_type, PVR_format, cur_texture_ptr );
 				} else {
-					glTexImage2D( opengl_texture_type, mipmap_level, PVR_type, width, height, 0, PVR_type, PVR_format, cur_texture_ptr );
+					glTexImage2D( opengl_texture_type, mipmap_level, PVR_type, _width, _height, 0, PVR_type, PVR_format, cur_texture_ptr );
 				}
 			}
 
@@ -2875,7 +2875,7 @@ unsigned int SOIL_direct_load_PVR_from_memory(
 				texture_ptr += compressed_image_size;
 			} else {
 				/* New formula that takes into account bit counts inferior to 8 (e.g. 1 bpp) */
-				texture_ptr += (width * height * header->dwBitCount + 7) / 8;
+				texture_ptr += (_width * _height * header->dwBitCount + 7) / 8;
 			}
 		}
 	}
@@ -2977,8 +2977,8 @@ unsigned int SOIL_direct_load_ETC1_from_memory(
 	GLuint tex_ID = 0;
 	PKMHeader* header = (PKMHeader*)buffer;
 	unsigned int opengl_texture_type = GL_TEXTURE_2D;
-	unsigned int width;
-	unsigned int height;
+	unsigned int _width;
+	unsigned int _height;
 	unsigned long compressed_image_size = buffer_length - PKM_HEADER_SIZE;
 	char *texture_ptr = (char*)buffer + PKM_HEADER_SIZE;
 	GLint unpack_aligment;
@@ -2993,9 +2993,9 @@ unsigned int SOIL_direct_load_ETC1_from_memory(
 		return 0;
 	}
 
-	width = (header->iWidthMSB << 8) | header->iWidthLSB;
-	height = (header->iHeightMSB << 8) | header->iHeightLSB;
-	compressed_image_size = (((width + 3) & ~3) * ((height + 3) & ~3)) >> 1;
+	_width = (header->iWidthMSB << 8) | header->iWidthLSB;
+	_height = (header->iHeightMSB << 8) | header->iHeightLSB;
+	compressed_image_size = (((_width + 3) & ~3) * ((_height + 3) & ~3)) >> 1;
 
 	// load the texture up
 	tex_ID = reuse_texture_ID;
@@ -3017,7 +3017,7 @@ unsigned int SOIL_direct_load_ETC1_from_memory(
 		glPixelStorei(GL_UNPACK_ALIGNMENT,1);				// Never have row-aligned in headers
 	}
 
-	soilGlCompressedTexImage2D( opengl_texture_type, 0, SOIL_GL_ETC1_RGB8_OES, width, height, 0, compressed_image_size, texture_ptr );
+	soilGlCompressedTexImage2D( opengl_texture_type, 0, SOIL_GL_ETC1_RGB8_OES, _width, _height, 0, compressed_image_size, texture_ptr );
 
 	if( glGetError() ) {
 		result_string_pointer = "failed: glCompressedTexImage2D() failed.";
