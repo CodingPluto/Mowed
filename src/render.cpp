@@ -34,7 +34,6 @@ std::pair<GLuint, std::pair<int, int>>load_texture_ex(const char imagePath[])
 
 GLuint load_vertices_ex(int raw_x, int raw_y, int raw_width, int raw_height, bool relative)
 {
-  std::cout << "CAMERA POSITION: " << camera_x << " : " << camera_y << std::endl;
   float adj_x = -1;
   float adj_y = -1;
   adj_x = (2.0f * ((float)raw_x / WIDTH)) - 1.0f;
@@ -71,10 +70,10 @@ GLuint load_vertices_ex(int raw_x, int raw_y, int raw_width, int raw_height, boo
   glBindVertexArray(vao);
   // vbo
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
   // ebo
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
 
   /////////////////////// Setting Attributes //////////////////////
   // Position attribute

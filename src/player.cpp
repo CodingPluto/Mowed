@@ -37,12 +37,13 @@ Player::Player():_keyboard(SDL_GetKeyboardState(0))
   texture = pair.first;
   _rect.w = pair.second.first;
   _rect.h = pair.second.second;
+  vao = load_vertices_ex(_rect.x, _rect.y, _rect.w, _rect.h);
+
 
 }
 
 void Player::update()
 {
-  std::cout << HEIGHT << std::endl;
   controller();
   camera_x = _rect.x - (WIDTH / 2 - _rect.w / 2);
   camera_y = _rect.y - (HEIGHT / 2 - _rect.h / 2);
@@ -51,5 +52,4 @@ void Player::update()
 void Player::render()
 {
   //std::cout << "Rect: " << _rect.x << " : " << _rect.y << " : " << _rect.w << " : " << _rect.h << std::endl;
-  vao = load_vertices_ex(_rect.x, _rect.y, _rect.w, _rect.h);
 }

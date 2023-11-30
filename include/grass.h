@@ -8,14 +8,13 @@ class Grass
 {
 private:
   float x, y;
-  int _width, _height;
-
 public:
   static void generate_grass();
   static void free_grass();
   static void render_grasses();
   Grass(float x, float y);
-  GLuint texture;
+  static GLuint texture;
+  static int width, height;
   GLuint vao;
   void render();
 };
