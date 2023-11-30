@@ -13,13 +13,15 @@ public:
 	animation(std::string name);
 	GLint GetFrame();
 	void Setstate(int state);
+	void QueState(int state);
 
 private:
-	std::vector<std::vector<std::pair<GLuint, GLuint>(texture, vao)>> animations_;
+	std::vector<std::vector<std::pair<GLuint, GLuint>>> animations_;
 	std::pair<int, int> animation_frame_; 
 	int animation_fps_:
 //	int next_animation_;
 	int last_timestep_ = 0;
+	std::vector<int> state_que_;
 	
 };
 

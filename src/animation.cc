@@ -29,10 +29,20 @@ GLuint animation::GetFrame()
         animation_frame_.second += (delta_time / mspf);
         last_timestep_ = SDL_GetTicks();
     }
-    return animations_[animation_frame_.first][nimation_frame_.second]
+    if (QueState.size() != 0) {
+        if (animation_frame_.second == 0) {
+        }
+    }
+    return animations_[animation_frame_.first][animation_frame_.second]
 }
 
 void animation::Setstate(int state)
 {
+    animation_frame_.first = state;
+}
+
+void animation::QueState(int state)
+{
+    state_que_.emplace_back(state);
 }
 
