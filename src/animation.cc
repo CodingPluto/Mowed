@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <render.h>
+#include <math.h>
 
 animation::animation(std::string name)
 {
@@ -22,7 +23,13 @@ animation::animation(std::string name)
 
 GLuint animation::GetFrame()
 {
-
+    int delta_time = SDL_GetTicks() - last_timestep_;
+    int mspf = pow((animation_fps_ * 1000), -1);
+    if (delta_time / mspf > 1) {
+        animation_frame_.second += (delta_time / mspf);
+        last_timestep_ = SDL_GetTicks();
+    }
+    return animations_[animation_frame_.first][nimation_frame_.second]
 }
 
 void animation::Setstate(int state)

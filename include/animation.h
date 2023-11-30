@@ -16,10 +16,10 @@ public:
 
 private:
 	std::vector<std::vector<std::pair<GLuint, GLuint>(texture, vao)>> animations_;
-	std::pair<int> animation_frame_;
+	std::pair<int, int> animation_frame_; 
 	int animation_fps_:
-	int next_animation;
-	int last_timestep = 0;
+//	int next_animation_;
+	int last_timestep_ = 0;
 	
 };
 
