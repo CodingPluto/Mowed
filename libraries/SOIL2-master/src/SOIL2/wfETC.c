@@ -208,21 +208,21 @@ void wfETC1_DecodeBlock( const void* WF_RESTRICT src, void* WF_RESTRICT pDst, co
 	}
 }
 
-void wfETC1_DecodeImage( const void* WF_RESTRICT pSrc, void* WF_RESTRICT pDst, const uint32_t width, const uint32_t height )
+void wfETC1_DecodeImage( const void* WF_RESTRICT pSrc, void* WF_RESTRICT pDst, const uint32_t _width, const uint32_t _height )
 {
 	const uint8_t* WF_RESTRICT src = (uint8_t*)pSrc;
 	uint8_t* WF_RESTRICT dst = (uint8_t*)pDst;
-	const uint32_t widthBlocks  = width/4;
-	const uint32_t heightBlocks = height/4;
+	const uint32_t widthBlocks  = _width/4;
+	const uint32_t heightBlocks = _height/4;
 	uint32_t x, y;
 	for( y = 0; y != heightBlocks; ++y )
 	{
 		for( x = 0; x != widthBlocks; ++x )
 		{
-			wfETC1_DecodeBlock( src, dst, width );
+			wfETC1_DecodeBlock( src, dst, _width );
 			src += 8;
 			dst += 16;
 		}
-		dst += width*4*3;
+		dst += _width*4*3;
 	}
 }

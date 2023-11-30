@@ -50,6 +50,6 @@ void Player::update()
 
 void Player::render()
 {
-  std::cout << "Rect: " << _rect.x << " : " << _rect.y << " : " << _rect.w << " : " << _rect.h << std::endl;
+  //std::cout << "Rect: " << _rect.x << " : " << _rect.y << " : " << _rect.w << " : " << _rect.h << std::endl;
   vao = load_vertices_ex(_rect.x, _rect.y, _rect.w, _rect.h);
 }

@@ -12,6 +12,7 @@
 #include <render.h>
 #include <chrono>
 #include <thread>
+#include <grass.h>
 //#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
 
 int main(int argc, char *argv[])
@@ -67,6 +68,7 @@ int main(int argc, char *argv[])
     //////////////////////////////////////////////////////////////////////////
     SDL_Event event;
     Player player;
+    Grass::generate_grass();
     while (true)
     {
         if (SDL_PollEvent(&event)) {
@@ -85,10 +87,9 @@ int main(int argc, char *argv[])
         player.render();
 
         auto vao = load_vertices_ex(300, 300, test_width, test_height);
-
+        Grass::render_grasses();
         render_texture(vao, texture_test);
         render_texture(player.vao, player.texture);
-
         // Swap the screen buffers
         SDL_GL_SwapWindow(window);
         std::this_thread::sleep_for(std::chrono::milliseconds(16));
@@ -106,6 +107,7 @@ int main(int argc, char *argv[])
     {
       glDeleteVertexArrays(1, &(*ebo));
     }
+    Grass::free_grass();
     vao_cache.clear();
     vbo_cache.clear();
     ebo_cache.clear();

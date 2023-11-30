@@ -7,8 +7,8 @@
 #define QOI_LINEAR 1
 
 typedef struct {
-   unsigned int width;
-   unsigned int height;
+   unsigned int _width;
+   unsigned int _height;
    unsigned char channels;
    unsigned char colorspace;
 } qoi_desc;
@@ -60,16 +60,16 @@ static void *qoi_encode(const void *data, const qoi_desc *desc, int *out_len) {
 
    if (
       data == NULL || out_len == NULL || desc == NULL ||
-      desc->width == 0 || desc->height == 0 ||
+      desc->_width == 0 || desc->_height == 0 ||
       desc->channels < 3 || desc->channels > 4 ||
       desc->colorspace > 1 ||
-      desc->height >= QOI_PIXELS_MAX / desc->width
+      desc->_height >= QOI_PIXELS_MAX / desc->_width
    ) {
       return NULL;
    }
 
    max_size =
-      desc->width * desc->height * (desc->channels + 1) +
+      desc->_width * desc->_height * (desc->channels + 1) +
       QOI_HEADER_SIZE + sizeof(qoi_padding);
 
    p = 0;
@@ -79,8 +79,8 @@ static void *qoi_encode(const void *data, const qoi_desc *desc, int *out_len) {
    }
 
    qoi_write_32(bytes, &p, QOI_MAGIC);
-   qoi_write_32(bytes, &p, desc->width);
-   qoi_write_32(bytes, &p, desc->height);
+   qoi_write_32(bytes, &p, desc->_width);
+   qoi_write_32(bytes, &p, desc->_height);
    bytes[p++] = desc->channels;
    bytes[p++] = desc->colorspace;
 
@@ -96,7 +96,7 @@ static void *qoi_encode(const void *data, const qoi_desc *desc, int *out_len) {
    px_prev.rgba.a = 255;
    px = px_prev;
 
-   px_len = desc->width * desc->height * desc->channels;
+   px_len = desc->_width * desc->_height * desc->channels;
    px_end = px_len - desc->channels;
    channels = desc->channels;
 
@@ -187,8 +187,8 @@ static int stbi_write_qoi_core(stbi__write_context *s, int x, int y, int comp, c
    if (y <= 0 || x <= 0 || data == NULL)
       return 0;
    qoi_desc desc;
-   desc.width = x;
-   desc.height = y;
+   desc._width = x;
+   desc._height = y;
    desc.channels = comp;
    desc.colorspace = QOI_LINEAR;
    int out_len = 0;

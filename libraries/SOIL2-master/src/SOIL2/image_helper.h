@@ -23,7 +23,7 @@ int
 	up_scale_image
 	(
 		const unsigned char* const orig,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		unsigned char* resampled,
 		int resampled_width, int resampled_height
 	);
@@ -38,7 +38,7 @@ int
 	mipmap_image
 	(
 		const unsigned char* const orig,
-		int width, int height, int channels,
+		int _width, int _height, int channels,
 		unsigned char* resampled,
 		int block_size_x, int block_size_y
 	);
@@ -48,13 +48,13 @@ int
 	and scales each channel from [0,255] to [16,235].
 	This makes the colors "Safe" for display on NTSC
 	displays.  Note that this is _NOT_ a good idea for
-	loading images like normal- or height-maps!
+	loading images like normal- or _height-maps!
 **/
 int
 	scale_image_RGB_to_NTSC_safe
 	(
 		unsigned char* orig,
-		int width, int height, int channels
+		int _width, int _height, int channels
 	);
 
 /**
@@ -68,7 +68,7 @@ int
 	convert_RGB_to_YCoCg
 	(
 		unsigned char* orig,
-		int width, int height, int channels
+		int _width, int _height, int channels
 	);
 
 /**
@@ -79,7 +79,7 @@ int
 	convert_YCoCg_to_RGB
 	(
 		unsigned char* orig,
-		int width, int height, int channels
+		int _width, int _height, int channels
 	);
 
 /**
@@ -91,7 +91,7 @@ int
 	RGBE_to_RGBdivA
 	(
 		unsigned char *image,
-		int width, int height,
+		int _width, int _height,
 		int rescale_to_max
 	);
 
@@ -104,7 +104,7 @@ int
 	RGBE_to_RGBdivA2
 	(
 		unsigned char *image,
-		int width, int height,
+		int _width, int _height,
 		int rescale_to_max
 	);
 

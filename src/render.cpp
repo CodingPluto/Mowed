@@ -9,7 +9,7 @@ float camera_x = 0; float camera_y = 0;
 std::pair<GLuint, std::pair<int, int>>load_texture_ex(const char imagePath[])
 {
   GLuint texture;
-  int width, height;
+  int _width, _height;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
   // texture parameters
@@ -18,14 +18,14 @@ std::pair<GLuint, std::pair<int, int>>load_texture_ex(const char imagePath[])
   // texture filtering
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  unsigned char* image = SOIL_load_image(imagePath, &width, &height, 0, SOIL_LOAD_RGBA);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  unsigned char* image = SOIL_load_image(imagePath, &_width, &_height, 0, SOIL_LOAD_RGBA);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
   glGenerateMipmap(GL_TEXTURE_2D);
   // Free image (texture kept)
   SOIL_free_image_data(image);
   glBindTexture(GL_TEXTURE_2D, 0);
 
-  return std::pair<GLint, std::pair<int, int>>(texture, std::pair<int, int>(width, height));
+  return std::pair<GLint, std::pair<int, int>>(texture, std::pair<int, int>(_width, _height));
 }
 
 
@@ -103,7 +103,7 @@ std::pair<GLuint, GLuint>load_texture_and_vertices(const char imagePath[], int r
 {
   // Relative positions now work!!
   GLuint texture;
-  int width, height;
+  int _width, _height;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
   // texture parameters
@@ -112,8 +112,8 @@ std::pair<GLuint, GLuint>load_texture_and_vertices(const char imagePath[], int r
   // texture filtering
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  unsigned char* image = SOIL_load_image(imagePath, &width, &height, 0, SOIL_LOAD_RGBA);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  unsigned char* image = SOIL_load_image(imagePath, &_width, &_height, 0, SOIL_LOAD_RGBA);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
   glGenerateMipmap(GL_TEXTURE_2D);
   // Free image (texture kept)
   SOIL_free_image_data(image);
@@ -125,8 +125,8 @@ std::pair<GLuint, GLuint>load_texture_and_vertices(const char imagePath[], int r
   adj_y = -((2.0f * ((float)raw_y / HEIGHT)) - 1.0f);
   float adj_w = 0;
   float adj_h = 0;
-  adj_w = (2.0f * ((float)width / WIDTH));
-  adj_h = -((2.0f * ((float)height / HEIGHT)));
+  adj_w = (2.0f * ((float)_width / WIDTH));
+  adj_h = -((2.0f * ((float)_height / HEIGHT)));
   float cam_x_adj = -1;
   float cam_y_adj = -1;
   cam_x_adj = (2.0f * ((float)camera_x / WIDTH));
@@ -183,7 +183,7 @@ std::pair<GLuint, GLuint>load_texture_and_vertices(const char imagePath[], int r
 GLuint load_texture(const char imagePath[])
 {
   GLuint texture;
-  int width, height;
+  int _width, _height;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
   // texture parameters
@@ -192,8 +192,8 @@ GLuint load_texture(const char imagePath[])
   // texture filtering
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  unsigned char* image = SOIL_load_image(imagePath, &width, &height, 0, SOIL_LOAD_RGBA);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  unsigned char* image = SOIL_load_image(imagePath, &_width, &_height, 0, SOIL_LOAD_RGBA);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
   glGenerateMipmap(GL_TEXTURE_2D);
   // Free image (texture kept)
   SOIL_free_image_data(image);

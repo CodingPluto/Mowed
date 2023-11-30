@@ -116,7 +116,7 @@ int main(int argc, char *argv[]){
   glBindVertexArray(0); // unbind vao
 
   GLuint texture;
-  int width = 0; int height = 0;
+  int _width = 0; int _height = 0;
 
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -128,9 +128,9 @@ int main(int argc, char *argv[]){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   
-  unsigned char *image = SOIL_load_image("test_image.jpg", &width, &height, 0, SOIL_LOAD_RGBA);
+  unsigned char *image = SOIL_load_image("test_image.jpg", &_width, &_height, 0, SOIL_LOAD_RGBA);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
   glGenerateMipmap(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -182,8 +182,8 @@ int main(int argc, char *argv[]){
   }
   else
   {
-    width = image->w;
-    height = image->h;
+    _width = image->w;
+    _height = image->h;
   }
   GLuint texture_format;
   auto nOfColors = image->format->BytesPerPixel;
@@ -210,5 +210,5 @@ int main(int argc, char *argv[]){
   }
 
 
-  glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, width, height, 0, texture_format, GL_UNSIGNED_BYTE, image->pixels);
-  //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);*/
+  glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, _width, _height, 0, texture_format, GL_UNSIGNED_BYTE, image->pixels);
+  //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);*/

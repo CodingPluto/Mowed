@@ -44,7 +44,7 @@ extern "C" {
 
 extern void wfETC1_DecodeBlock( const void* WF_RESTRICT src, void* WF_RESTRICT dst, const uint32_t dstStride /*=4*/ ); //!< stride in pixels; must be a multiple of four
 
-extern void wfETC1_DecodeImage( const void* WF_RESTRICT src, void* WF_RESTRICT dst, const uint32_t width, const uint32_t height ); //!< width/height in pixels; must be multiples of four
+extern void wfETC1_DecodeImage( const void* WF_RESTRICT src, void* WF_RESTRICT dst, const uint32_t _width, const uint32_t _height ); //!< _width/_height in pixels; must be multiples of four
 
 #ifdef __cplusplus
 }
