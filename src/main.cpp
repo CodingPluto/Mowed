@@ -15,7 +15,9 @@
 #include <render.h>
 #include <chrono>
 #include <thread>
+#include <animation.h>
 #include <grass.h>
+
 //#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
 
 void GetOpenGLErrors();
@@ -68,6 +70,7 @@ int main(int argc, char *argv[])
     SDL_Event event;
     //Player player;
     Grass::generate_grass();
+    animation animation1("grass");
 
     double old_time = 0;
     double current_time = 0;
@@ -79,14 +82,12 @@ int main(int argc, char *argv[])
         if (event.type == SDL_QUIT) {
           break;
         }
-      }
+    }
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
       our_shader.Use();
-
-
-
+      
 
       glActiveTexture(GL_TEXTURE0);
       //glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture" ), 0 );
