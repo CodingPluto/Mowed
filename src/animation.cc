@@ -7,7 +7,7 @@
 
 animation::animation(std::string name)
 {
-    std::string path = "../assets/" + name + "/";
+    std::string path = name + "/";
     int index_pointer = 0;
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
         std::string animation_path = (entry.path()).string() + "/";
