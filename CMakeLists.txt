@@ -2,7 +2,6 @@ cmake_minimum_required (VERSION 3.8)
 project ("Mower")
 add_definitions(-DGLEW_STATIC)
 set(CMAKE_CXX_STANDARD 17)
-target_compile_features(${TARGET_NAME} PRIVATE cxx_std_17)
 set(CMAKE_PREFIX_PATH "libraries/glew/")
 set(GLEW_INCLUDE_DIRS "libraries/glew/include")
 find_library(GLEW_LIBRARIES glew32s PATHS "${CMAKE_CURRENT_SOURCE_DIR}/libraries/glew/lib/Release/x64")
@@ -25,7 +24,7 @@ add_executable(MowerExecutable
 "libraries/SOIL2-master/src/SOIL2/image_DXT.c" "libraries/SOIL2-master/src/SOIL2/image_helper.c" "libraries/SOIL2-master/src/SOIL2/SOIL2.c" "libraries/SOIL2-master/src/SOIL2/wfETC.c"
 "src/main.cpp"
 "include/Shader.h"
-"src/player.cpp" "include/player.h" "include/render.h" "src/render.cpp" "src/grass.cpp" "include/grass.h"  "include/animation.h"  "src/animation.cc")
+"src/player.cpp" "include/player.h" "include/render.h" "src/render.cpp" "src/grass.cpp" "include/grass.h" "include/animation.h"  "src/animation.cc")
 
 target_include_directories(MowerExecutable PUBLIC "include" ${SDL2_INCLUDE_DIRS})
 target_link_libraries(MowerExecutable PRIVATE GLEW::GLEW ${OPENGL_gl_LIBRARY} ${SDL2_LIBRARIES} SDL2_image::SDL2_image)

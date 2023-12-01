@@ -11,7 +11,7 @@ class  animation
 {
 public:
 	animation(std::string name);
-	GLint GetFrame();
+	std::pair<GLuint, GLuint> GetFrame();
 	void Setstate(int state);
 	void QueState(int state);
 
