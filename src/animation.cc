@@ -13,10 +13,10 @@ animation::animation(std::string name)
         std::string animation_path = (entry.path()).string();
         index_pointer += 1;
         for (const auto& animation_entry : std::filesystem::directory_iterator(animation_path)) {
-            auto frame = load_texture_ex(((animation_entry.path()).string()).c_str());
+            auto frame = LoadTextureEx(((animation_entry.path()).string()).c_str());
             std::pair<GLuint, GLuint> buffer;
             buffer.first = frame.first;
-            buffer.second = load_vertices_ex(300, 300, frame.second.first, frame.second.second);
+            buffer.second = LoadVerticesEx(300, 300, frame.second.first, frame.second.second);
             animations_[index_pointer].emplace_back(buffer); 
         }
     }

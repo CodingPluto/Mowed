@@ -11,12 +11,12 @@ private:
 public:
   static void generate_grass();
   static void free_grass();
-  static void render_grasses();
+  static void RenderGrasses();
   Grass(float x, float y);
   static GLuint texture;
   static int width, height;
   GLuint vao;
-  void render();
+  void Render();
 };
 
 

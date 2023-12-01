@@ -22,11 +22,11 @@ private:
   PlayerState _state;
   SDL_Rect _rect;
   const Uint8* _keyboard;
-  void controller();
+  void Controller();
 public:
   Player();
-  void update();
-  void render();
+  void Update();
+  void Render();
   GLint texture;
   GLint vao;
   animation animation_;
