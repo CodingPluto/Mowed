@@ -14,7 +14,7 @@ animation::animation(std::string name)
         std::vector<std::pair<GLuint, GLuint>> empty;
         animations_.emplace_back(empty);
         for (const auto& animation_entry : std::filesystem::directory_iterator(animation_path)) {
-            auto frame = load_texture_ex(((animation_entry.path()).string()).c_str());
+            auto frame = LoadTextureEx(((animation_entry.path()).string()).c_str());
             animations_[index_pointer].emplace_back(frame); 
         }
         index_pointer += 1;
@@ -38,7 +38,7 @@ std::pair<GLuint, GLuint> animation::GetFrame(int x, int y)
         }
     }
     std::pair dim = animations_[animation_frame_.first][animation_frame_.second].second;
-    GLuint vao = load_vertices_ex(x, y, dim.first, dim.second);
+    GLuint vao = LoadVerticesEx(x, y, dim.first, dim.second);
     GLuint texture = animations_[animation_frame_.first][animation_frame_.second].first;
     std::pair<GLuint, GLuint> out = { vao, texture };
     return out;
