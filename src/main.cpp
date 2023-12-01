@@ -68,9 +68,9 @@ int main(int argc, char *argv[])
     //////////////////////////////// Game Loop ///////////////////////////////
     //////////////////////////////////////////////////////////////////////////
     SDL_Event event;
-    //Player player;
+    Player player;
     Grass::generate_grass();
-    animation animation1("grass");
+    //animation animation1("grass");
 
     double old_time = 0;
     double current_time = 0;
@@ -92,12 +92,12 @@ int main(int argc, char *argv[])
       glActiveTexture(GL_TEXTURE0);
       //glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture" ), 0 );
       Grass::RenderGrasses();
-      auto vao = LoadVerticesEx(300, 300, test_width, test_height);
-      Grass::render_grasses();
-      render_texture(vao, texture_test);
-      render_texture(player.vao, player.texture);
+      //auto vao = LoadVerticesEx(300, 300, test_width, test_height);
+      Grass::RenderGrasses();
+      //render_texture(vao, texture_test);
+      //render_texture(player.vao, player.texture);
       auto player_frame = player.animation_.GetFrame(player._rect.x, player._rect.y);
-      render_texture(player_frame.first, player_frame.second);
+      RenderTexture(player_frame.first, player_frame.second);
       // Swap the screen buffers
       SDL_GL_SwapWindow(window);
       current_time = SDL_GetTicks();
