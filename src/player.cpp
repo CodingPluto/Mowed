@@ -4,7 +4,7 @@
 #include <render.h>
 GLuint Player::_player_textures[8] = {};
 
-void Player::controller()
+void Player::Controller()
 {
   if (_keyboard[SDL_SCANCODE_D])
   {
@@ -29,27 +29,30 @@ void Player::controller()
 
 }
 
-Player::Player():_keyboard(SDL_GetKeyboardState(0)), animation_("player")
+Player::Player():_keyboard(SDL_GetKeyboardState(0)), animation_("player") // this anim constructor is currently causing a seg fault.
 {
+  std::cout << "Entered Constructor" << std::endl;
   _rect.x = 0;
   _rect.y = 0;
-  auto pair = load_texture_ex("mower.png");
+  auto pair = LoadTextureEx("mower.png");
   texture = pair.first;
   _rect.w = pair.second.first;
   _rect.h = pair.second.second;
-  vao = load_vertices_ex(_rect.x, _rect.y, _rect.w, _rect.h);
+  vao = LoadVerticesEx(_rect.x, _rect.y, _rect.w, _rect.h);
 
+
+  std::cout << "Created Player" << std::endl;
 
 }
 
-void Player::update()
+void Player::Update()
 {
-  controller();
+  Controller();
   camera_x = _rect.x - (WIDTH / 2 - _rect.w / 2);
   camera_y = _rect.y - (HEIGHT / 2 - _rect.h / 2);
 }
 
-void Player::render()
+void Player::Render()
 {
   //std::cout << "Rect: " << _rect.x << " : " << _rect.y << " : " << _rect.w << " : " << _rect.h << std::endl;
 }

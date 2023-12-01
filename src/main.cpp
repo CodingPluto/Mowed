@@ -2,6 +2,9 @@
 #include <SDL.h>
 #include <GL/glew.h>
 #include <SDL_opengl.h>
+//#include <glm/glm.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/type_ptr.hpp>
 #include <Shader.h>
 #include <fstream>
 #include <sstream>
@@ -14,6 +17,8 @@
 #include <thread>
 #include <grass.h>
 //#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
+
+void GetOpenGLErrors();
 
 int main(int argc, char *argv[])
 {
@@ -42,38 +47,32 @@ int main(int argc, char *argv[])
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    // Shaders (see Shader.h)
+
     Shader our_shader( "core.vs", "core.frag" );
+
+
+
+
 
     /////////////////////// Vertex Data //////////////////////
     //auto texture_png = load_texture("mower.png");
-    auto pair = load_texture_ex("test_image.jpg");
-    auto texture_test = pair.first;
-    int test_width = pair.second.first;
-    int test_height = pair.second.second;
+    //auto pair = load_texture_ex("test_image.jpg");
+    //auto texture_test = pair.first;
+    //int test_width = pair.second.first;
+    //int test_height = pair.second.second;
+    //auto vao = load_vertices_ex(300, 300, test_width, test_height);
 
-    /////////////////////// Setting Attributes //////////////////////
-    // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
-    // Color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-    // Texture Coordinate attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(2);
-    glBindVertexArray(0); // Unbind VAO
     //////////////////////////////////////////////////////////////////////////
     //////////////////////////////// Game Loop ///////////////////////////////
     //////////////////////////////////////////////////////////////////////////
     SDL_Event event;
-    Player player;
+    //Player player;
     Grass::generate_grass();
 
     double old_time = 0;
     double current_time = 0;
     double delta_time = 0;
-     while (true)
+    while (true)
     {
       old_time = current_time;
       if (SDL_PollEvent(&event)) {
@@ -81,16 +80,17 @@ int main(int argc, char *argv[])
           break;
         }
       }
-      player.update();
-      glClearColor( 0.2f, 0.3f, 0.3f, 1.0f );
-      glClear( GL_COLOR_BUFFER_BIT );
-      // Draw the triangle
-      our_shader.Use( );
-      glActiveTexture( GL_TEXTURE0 );
+      glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+      glClear(GL_COLOR_BUFFER_BIT);
 
-      glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture" ), 0 );
-      player.render();
+      our_shader.Use();
 
+
+
+
+      glActiveTexture(GL_TEXTURE0);
+      //glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture" ), 0 );
+      Grass::RenderGrasses();
       auto vao = load_vertices_ex(300, 300, test_width, test_height);
       Grass::render_grasses();
       render_texture(vao, texture_test);
@@ -100,9 +100,10 @@ int main(int argc, char *argv[])
       // Swap the screen buffers
       SDL_GL_SwapWindow(window);
       current_time = SDL_GetTicks();
-      delta_time = (current_time - old_time) * pow(10,-3);
+      delta_time = (current_time - old_time) * pow(10, -3);
+      GetOpenGLErrors();
       std::cout << delta_time << std::endl;
-      //std::this_thread::sleep_for(std::chrono::milliseconds(8));
+      std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 
     for (auto vao : vao_cache)
@@ -112,11 +113,14 @@ int main(int argc, char *argv[])
     for (auto vbo : vbo_cache)
     {
       glDeleteVertexArrays(1, &(*vbo));
+      glDeleteBuffers(1, &(*vbo));
     }
     for (auto ebo : ebo_cache)
     {
       glDeleteVertexArrays(1, &(*ebo));
+      glDeleteBuffers(1, &(*ebo));
     }
+    GetOpenGLErrors();
     vao_cache.clear();
     vbo_cache.clear();
     ebo_cache.clear();
@@ -127,4 +131,36 @@ int main(int argc, char *argv[])
     SDL_DestroyWindow(window);
     SDL_Quit();
     return EXIT_SUCCESS;
+}
+
+
+void GetOpenGLErrors()
+{
+  GLenum error;
+  while ((error = glGetError()) != GL_NO_ERROR) {
+    switch (error) {
+    case GL_INVALID_ENUM:
+      std::cerr << "OpenGL Error: GL_INVALID_ENUM\n";
+      break;
+    case GL_INVALID_VALUE:
+      std::cerr << "OpenGL Error: GL_INVALID_VALUE\n";
+      break;
+    case GL_INVALID_OPERATION:
+      std::cerr << "OpenGL Error: GL_INVALID_OPERATION\n";
+      break;
+    case GL_STACK_OVERFLOW:
+      std::cerr << "OpenGL Error: GL_STACK_OVERFLOW\n";
+      break;
+    case GL_STACK_UNDERFLOW:
+      std::cerr << "OpenGL Error: GL_STACK_UNDERFLOW\n";
+      break;
+    case GL_OUT_OF_MEMORY:
+      std::cerr << "OpenGL Error: GL_OUT_OF_MEMORY\n";
+      break;
+      // Add more cases as needed based on the potential error codes
+    default:
+      std::cerr << "Unknown OpenGL Error\n";
+      break;
+    }
+  }
 }

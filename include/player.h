@@ -21,12 +21,12 @@ private:
   static GLuint _player_textures[8];
   PlayerState _state;
   const Uint8* _keyboard;
-  void controller();
+  void Controller();
 public:
   SDL_Rect _rect;
   Player();
-  void update();
-  void render();
+  void Update();
+  void Render();
   GLint texture;
   GLint vao;
   animation animation_;

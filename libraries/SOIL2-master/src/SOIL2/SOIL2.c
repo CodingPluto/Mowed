@@ -2675,7 +2675,7 @@ unsigned int SOIL_direct_load_PVR_from_memory(
 	// Check the header size
 	if ( header->dwHeaderSize != sizeof(PVR_Texture_Header) ) {
 		if ( header->dwHeaderSize == PVRTEX_V1_HEADER_SIZE ) {
-			result_string_pointer = "this is an old pvr ( update the PVR file )";
+			result_string_pointer = "this is an old pvr ( Update the PVR file )";
 
 			if ( loading_as_cubemap ) {
 				if( header->dwpfFlags & PVRTEX_CUBEMAP ) {

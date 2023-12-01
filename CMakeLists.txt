@@ -16,7 +16,8 @@ set(CMAKE_PREFIX_PATH "libraries/SDL2_image")
 set(CMAKE_MODULE_PATH "libraries/SDL2_image/cmake/sdl2_image-config.cmake")
 find_package(SDL2_image REQUIRED)
 find_package(OpenGL REQUIRED)
-
+#set(CMAKE_PREFIX_PATH "libraries/glm/")
+#set(CMAKE_MODULE_PATH "libraries/SDL2_image/cmake/sdl2_image-config.cmake")
 
 
 

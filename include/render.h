@@ -15,12 +15,10 @@ extern std::vector<GLuint*> ebo_cache;
 extern std::vector<GLuint*> vao_cache;
 
 
-GLuint load_vertices_ex(int raw_x, int raw_y, int raw_width, int raw_height, bool relative = true);
-GLuint load_vertices(GLfloat old_vertices[32]);
-GLuint load_texture(const char imagePath[]);
-void render_texture(GLuint vao, GLuint texture);
-
-std::pair<GLuint,std::pair<int,int>>load_texture_ex(const char imagePath[]);
-
-std::pair<GLuint, GLuint>load_texture_and_vertices(const char imagePath[], int raw_x, int raw_y);
+GLuint LoadVerticesEx(int raw_x, int raw_y, int raw_width, int raw_height, bool relative = true);
+//GLuint LoadVertices(GLfloat old_vertices[32]);
+//GLuint LoadTexture(const char imagePath[]);
+void RenderTexture(GLuint vao, GLuint texture);
+std::pair<GLuint,std::pair<int,int>>LoadTextureEx(const char imagePath[]);
+//std::pair<GLuint, GLuint>LoadTextureAndVertices(const char imagePath[], int raw_x, int raw_y);
 #endif //RENDER_H
