@@ -58,11 +58,11 @@ int main(int argc, char *argv[])
 
     /////////////////////// Vertex Data //////////////////////
     //auto texture_png = load_texture("mower.png");
-    //auto pair = load_texture_ex("test_image.jpg");
+    //auto pair = LoadTextureEx("test_image.jpg");
     //auto texture_test = pair.first;
     //int test_width = pair.second.first;
     //int test_height = pair.second.second;
-    //auto vao = load_vertices_ex(300, 300, test_width, test_height);
+    //auto vao = LoadVerticesEx(300, 300, test_width, test_height);
 
     //////////////////////////////////////////////////////////////////////////
     //////////////////////////////// Game Loop ///////////////////////////////
@@ -94,11 +94,11 @@ int main(int argc, char *argv[])
       Grass::RenderGrasses();
       //auto vao = LoadVerticesEx(300, 300, test_width, test_height);
       Grass::RenderGrasses();
-      //render_texture(vao, texture_test);
-      //render_texture(player.vao, player.texture);
+      //RenderTexture(vao, texture_test);
+      //RenderTexture(player.vao, player.texture);
       auto player_frame = player.animation_.GetFrame(player._rect.x, player._rect.y);
       RenderTexture(player_frame.first, player_frame.second);
-      // Swap the screen buffers
+      //Swap the screen buffers
       SDL_GL_SwapWindow(window);
       current_time = SDL_GetTicks();
       delta_time = (current_time - old_time) * pow(10, -3);
