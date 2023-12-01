@@ -7,6 +7,7 @@
 
 animation::animation(std::string name)
 {
+  /*
     std::string path = "../assets/" + name + "/";
     int index_pointer = 0;
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
@@ -20,6 +21,7 @@ animation::animation(std::string name)
             animations_[index_pointer].emplace_back(buffer); 
         }
     }
+    */
 }
 
 std::pair<GLuint, GLuint> animation::GetFrame()
