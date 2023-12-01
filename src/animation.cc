@@ -11,8 +11,9 @@ animation::animation(std::string name)
     int index_pointer = 0;
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
         std::string animation_path = (entry.path()).string() + "/";
-        std::vector<std::pair<GLuint, GLuint>> empty;
+        std::vector<std::pair<GLuint, std::pair<int, int>>> empty;
         animations_.emplace_back(empty);
+        
         for (const auto& animation_entry : std::filesystem::directory_iterator(animation_path)) {
             auto frame = LoadTextureEx(((animation_entry.path()).string()).c_str());
             animations_[index_pointer].emplace_back(frame); 
