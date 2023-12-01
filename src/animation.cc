@@ -24,12 +24,16 @@ animation::animation(std::string name)
 
 std::pair<GLuint, GLuint> animation::GetFrame(int x, int y)
 {
-    int delta_time = SDL_GetTicks() - last_timestep_;
+    int ticks = (int) SDL_GetTicks64();
+    int delta_time = ticks - last_timestep_;
+    last_timestep_ = SDL_GetTicks();
     if (delta_time != 0) { 
-        int mspf = pow((animation_fps_ / 1000), -1);
+        int mspf = std::pow(((float)animation_fps_ / 1000), -1);
         if (delta_time / mspf > 1) {
             animation_frame_.second += (delta_time / mspf);
-            last_timestep_ = SDL_GetTicks();
+            if (animation_frame_.second > (animations_[animation_frame_.first].size()) - 1) {
+                animation_frame_.second = 0;
+            }
         }
         if (state_que_.size() != 0) {
             if (animation_frame_.second == 0) {
