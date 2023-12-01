@@ -20,10 +20,10 @@ class Player
 private:
   static GLuint _player_textures[8];
   PlayerState _state;
-  SDL_Rect _rect;
   const Uint8* _keyboard;
   void controller();
 public:
+  SDL_Rect _rect;
   Player();
   void update();
   void render();
