@@ -92,6 +92,13 @@ int main(int argc, char *argv[])
       glActiveTexture(GL_TEXTURE0);
       //glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture" ), 0 );
       Grass::RenderGrasses();
+      auto vao = load_vertices_ex(300, 300, test_width, test_height);
+      Grass::render_grasses();
+      render_texture(vao, texture_test);
+      render_texture(player.vao, player.texture);
+      auto player_frame = player.animation_.GetFrame(player._rect.x, player._rect.y);
+      render_texture(player_frame.first, player_frame.second);
+      // Swap the screen buffers
       SDL_GL_SwapWindow(window);
       current_time = SDL_GetTicks();
       delta_time = (current_time - old_time) * pow(10, -3);
