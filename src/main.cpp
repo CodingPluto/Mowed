@@ -2,9 +2,9 @@
 #include <SDL.h>
 #include <GL/glew.h>
 #include <SDL_opengl.h>
-//#include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
-//#include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <Shader.h>
 #include <fstream>
 #include <sstream>
@@ -21,9 +21,10 @@
 //#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
 
 void GetOpenGLErrors();
-
 int main(int argc, char *argv[])
 {
+    camera_x = 0;
+    camera_y = 0;
     //////////////////// INIT INIT /////////////////////////////
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -67,14 +68,24 @@ int main(int argc, char *argv[])
     //////////////////////////////////////////////////////////////////////////
     //////////////////////////////// Game Loop ///////////////////////////////
     //////////////////////////////////////////////////////////////////////////
+
+
+    glm::vec3 cameraPosition(0.0f, 0.0f, 0.0f);
+
     SDL_Event event;
-    Player player;
-    Grass::generate_grass();
+    //Player play
+    //Grass::generate_grass();
+    //Grass grass(40, 40);
     //animation animation1("grass");
 
     double old_time = 0;
     double current_time = 0;
     double delta_time = 0;
+    float aspect = (float)WIDTH / HEIGHT;
+    float zNear = 1.0f; float zFar = -1.0f;
+    glm::mat4 projection = glm::ortho(-aspect, aspect, -1.0f, 1.0f, zNear, zFar);
+    Grass::generate_grass();
+    Player player;
     while (true)
     {
       old_time = current_time;
@@ -83,30 +94,48 @@ int main(int argc, char *argv[])
           break;
         }
     }
+      std::cout << camera_x << " : " << camera_y << std::endl;
+
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
-
+      player.Update();
       our_shader.Use();
-      
+      cameraPosition.x = camera_x;
+      cameraPosition.y = camera_y;
+      glm::mat4 view = glm::mat4(1.0f);
+      view = glm::translate(glm::mat4(1.0f), -cameraPosition);
+      glm::mat4 viewProjection = projection * view;
+      std::cout << camera_x << " : " << camera_y << std::endl;
+      glUniformMatrix4fv(glGetUniformLocation(our_shader.program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
+
+      //cameraPosition.x += 0.01;
+      //cameraPosition.y -= 0.01;
+
 
       glActiveTexture(GL_TEXTURE0);
-      //glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture" ), 0 );
+      glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture1" ), 0 );
       Grass::RenderGrasses();
+
+      //Grass::RenderGrasses();
       //auto vao = LoadVerticesEx(300, 300, test_width, test_height);
-      Grass::RenderGrasses();
-      //RenderTexture(vao, texture_test);
+      //Grass::RenderGrasses();
+      //RenderTexture(Grass::grasses[0]->vao, Grass::texture);
+
+
+           //RenderTexture(vao, texture_test);
       //RenderTexture(player.vao, player.texture);
-      auto player_frame = player.animation_.GetFrame(player._rect.x, player._rect.y);
-      RenderTexture(player_frame.first, player_frame.second);
+      //auto player_frame = player.animation_.GetFrame(player._rect.x, player._rect.y);
+      //RenderTexture(grass.va, player_frame.second);
       //Swap the screen buffers
+
       SDL_GL_SwapWindow(window);
       current_time = SDL_GetTicks();
       delta_time = (current_time - old_time) * pow(10, -3);
       GetOpenGLErrors();
-      std::cout << delta_time << std::endl;
+      //std::cout << delta_time << std::endl;
       std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
-
+    /////////////////////////////// Clean Up //////////////////////////////
     for (auto vao : vao_cache)
     {
       glDeleteVertexArrays(1, &(*vao));
@@ -121,13 +150,12 @@ int main(int argc, char *argv[])
       glDeleteVertexArrays(1, &(*ebo));
       glDeleteBuffers(1, &(*ebo));
     }
+    Grass::FreeGrass();
+
     GetOpenGLErrors();
     vao_cache.clear();
     vbo_cache.clear();
     ebo_cache.clear();
-    /////////////////////////////// Clean Up //////////////////////////////
-
-    Grass::free_grass();
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();

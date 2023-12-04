@@ -23,7 +23,7 @@ private:
   const Uint8* _keyboard;
   void Controller();
 public:
-  SDL_Rect _rect;
+  SDL_FRect _rect;
   Player();
   void Update();
   void Render();

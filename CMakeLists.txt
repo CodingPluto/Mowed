@@ -18,6 +18,7 @@ find_package(SDL2_image REQUIRED)
 find_package(OpenGL REQUIRED)
 #set(CMAKE_PREFIX_PATH "libraries/glm/")
 #set(CMAKE_MODULE_PATH "libraries/SDL2_image/cmake/sdl2_image-config.cmake")
+set(GLM_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/libraries/glm/")
 
 
 
@@ -27,8 +28,8 @@ add_executable(MowerExecutable
 "include/Shader.h"
 "src/player.cpp" "include/player.h" "include/render.h" "src/render.cpp" "src/grass.cpp" "include/grass.h" "include/animation.h"  "src/animation.cc")
 
-target_include_directories(MowerExecutable PUBLIC "include" ${SDL2_INCLUDE_DIRS})
-target_link_libraries(MowerExecutable PRIVATE GLEW::GLEW ${OPENGL_gl_LIBRARY} ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
+target_include_directories(MowerExecutable PUBLIC "include" ${SDL2_INCLUDE_DIRS} "libraries/glm/")
+target_link_libraries(MowerExecutable PRIVATE GLEW::GLEW ${OPENGL_gl_LIBRARY} ${SDL2_LIBRARIES} SDL2_image::SDL2_image ${GLM_INCLUDE_DIR})
 
 ############################################################Gotta remove cache and reconfigure to change shaders####################################################################################################
 

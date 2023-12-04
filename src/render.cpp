@@ -5,7 +5,8 @@
  std::vector<GLuint*> ebo_cache;
 
  std::vector<GLuint*> vao_cache;
-float camera_x = 0; float camera_y = 0;
+ float camera_x;
+ float camera_y;
 
 std::pair<GLuint, std::pair<int, int>>LoadTextureEx(const char imagePath[]){
   GLuint texture;
@@ -38,17 +39,12 @@ GLuint LoadVerticesEx(int raw_x, int raw_y, int raw_width, int raw_height, bool 
   adj_w = (2.0f * ((float)raw_width / WIDTH));
   adj_h = -((2.0f * ((float)raw_height / HEIGHT)));
 
-  float cam_x_adj = -1;
-  float cam_y_adj = -1;
-  cam_x_adj = (2.0f * ((float)camera_x / WIDTH));
-  cam_y_adj = -((2.0f * ((float)camera_y / HEIGHT)));
-
   GLfloat vertices[] = {
     // Positions                                           // Colors                   // Texture Coords
-     adj_x - cam_x_adj + adj_w,  adj_y - cam_y_adj,          0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
-     adj_x - cam_x_adj + adj_w , adj_y + adj_h - cam_y_adj,  0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
-     adj_x - cam_x_adj,          adj_y + adj_h - cam_y_adj,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
-     adj_x - cam_x_adj,          adj_y - cam_y_adj,          0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left
+     adj_x + adj_w,  adj_y,          0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
+     adj_x + adj_w , adj_y + adj_h,  0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
+     adj_x,          adj_y + adj_h,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
+     adj_x,          adj_y,          0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left
   };
 
   GLuint indices[] = {
@@ -89,9 +85,7 @@ GLuint LoadVerticesEx(int raw_x, int raw_y, int raw_width, int raw_height, bool 
 
 void RenderTexture(GLuint vao, GLuint texture)
 {
-  glBindTexture(GL_TEXTURE_2D, texture);
   glBindVertexArray(vao);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-  glBindVertexArray(0);
 }
 

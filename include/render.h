@@ -2,7 +2,9 @@
 #define RENDER_H
 #include <SOIL2.h>
 #include <GL/glew.h>
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <SDL_opengl.h>
 #include <iostream>
 #include <vector>
@@ -14,6 +16,8 @@ extern std::vector<GLuint*> ebo_cache;
 
 extern std::vector<GLuint*> vao_cache;
 
+extern float camera_x;
+extern float camera_y;
 
 GLuint LoadVerticesEx(int raw_x, int raw_y, int raw_width, int raw_height, bool relative = true);
 //GLuint LoadVertices(GLfloat old_vertices[32]);
