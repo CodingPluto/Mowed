@@ -3,28 +3,29 @@
 #include <iostream>
 #include <render.h>
 GLuint Player::_player_textures[8] = {};
+const float speed = 0.03;
 
 void Player::Controller()
 {
   if (_keyboard[SDL_SCANCODE_D])
   {
     _state = player_walk_left;
-    _rect.x += 3;
+    _rect.x += speed;
   }
   if (_keyboard[SDL_SCANCODE_A])
   {
     _state = player_walk_right;
-    _rect.x -= 3;
+    _rect.x -= speed;
   }
   if (_keyboard[SDL_SCANCODE_S])
   {
     _state = player_walk_down;
-    _rect.y += 3;
+    _rect.y += speed;
   }
   if (_keyboard[SDL_SCANCODE_W])
   {
     _state = player_walk_up;
-    _rect.y -= 3;
+    _rect.y -= speed;
   }
 
 }
@@ -48,8 +49,8 @@ Player::Player():_keyboard(SDL_GetKeyboardState(0)), animation_("player") // thi
 void Player::Update()
 {
   Controller();
-  camera_x = _rect.x - (WIDTH / 2 - _rect.w / 2);
-  camera_y = _rect.y - (HEIGHT / 2 - _rect.h / 2);
+  camera_x = _rect.x;
+  camera_y = -_rect.y;
 }
 
 void Player::Render()
