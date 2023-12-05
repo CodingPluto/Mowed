@@ -6,29 +6,18 @@
 #include <SDL_OpenGL.h>
 #include <animation.h>
 
-enum PlayerState
-{
-  player_idle = 0,
-  player_walk_left,
-  player_walk_right,
-  player_walk_up,
-  player_walk_down
-};
 
 class Player
 {
 private:
   static GLuint _player_textures[8];
-  PlayerState _state;
   const Uint8* _keyboard;
   void Controller();
 public:
-  SDL_FRect _rect;
+  SDL_FRect _rect = {0,0,0,0};
   Player();
   void Update();
   void Render();
-  GLint texture;
-  GLint vao;
   animation animation_;
 };
 

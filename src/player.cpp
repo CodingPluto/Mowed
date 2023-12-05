@@ -7,41 +7,34 @@ const float speed = 0.03;
 
 void Player::Controller()
 {
-  if (_keyboard[SDL_SCANCODE_D])
+  /*if (_keyboard[sdl_scancode_d])
   {
     _state = player_walk_left;
     _rect.x += speed;
   }
-  if (_keyboard[SDL_SCANCODE_A])
+  if (_keyboard[sdl_scancode_a])
   {
     _state = player_walk_right;
     _rect.x -= speed;
   }
-  if (_keyboard[SDL_SCANCODE_S])
+  if (_keyboard[sdl_scancode_s])
   {
     _state = player_walk_down;
     _rect.y += speed;
   }
-  if (_keyboard[SDL_SCANCODE_W])
+  if (_keyboard[sdl_scancode_w])
   {
     _state = player_walk_up;
     _rect.y -= speed;
-  }
+  }*/
 
 }
 
-Player::Player():_keyboard(SDL_GetKeyboardState(0)), animation_("player") // this anim constructor is currently causing a seg fault.
+Player::Player():_keyboard(SDL_GetKeyboardState(0)), animation_("player", _rect.x, _rect.y)
 {
   std::cout << "Entered Constructor" << std::endl;
   _rect.x = 0;
   _rect.y = 0;
-  auto pair = LoadTextureEx("mower.png");
-  texture = pair.first;
-  _rect.w = pair.second.first;
-  _rect.h = pair.second.second;
-  vao = LoadVerticesEx(_rect.x, _rect.y, _rect.w, _rect.h);
-
-
   std::cout << "Created Player" << std::endl;
 
 }
@@ -54,6 +47,9 @@ void Player::Update()
 }
 
 void Player::Render()
-{
-  //std::cout << "Rect: " << _rect.x << " : " << _rect.y << " : " << _rect.w << " : " << _rect.h << std::endl;
+{   
+    GLuint frame_tex = animation_.GetFrame();
+    glBindTexture(GL_TEXTURE_2D, frame_tex);
+    RenderTexture(animation_.vao_, frame_tex);
+    glBindVertexArray(0);
 }

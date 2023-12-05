@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
       glActiveTexture(GL_TEXTURE0);
       glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture1" ), 0 );
       Grass::RenderGrasses();
-
+      player.Render();
       //Grass::RenderGrasses();
       //auto vao = LoadVerticesEx(300, 300, test_width, test_height);
       //Grass::RenderGrasses();
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
            //RenderTexture(vao, texture_test);
       //RenderTexture(player.vao, player.texture);
       //auto player_frame = player.animation_.GetFrame(player._rect.x, player._rect.y);
-      //RenderTexture(grass.va, player_frame.second);
+      //RenderTexture(player_frame.first, player_frame.second);
       //Swap the screen buffers
 
       SDL_GL_SwapWindow(window);

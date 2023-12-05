@@ -10,13 +10,14 @@
 class  animation
 {
 public:
-	animation(std::string name);
-	std::pair<GLuint, GLuint> GetFrame(int x, int y);
+	animation(std::string name, int x, int y);
+	GLuint GetFrame();
 	void Setstate(int state);
 	void QueState(int state);
+	GLuint vao_ = NULL;
 
 private:
-	std::vector<std::vector<std::pair<GLuint, std::pair<int,int> >>> animations_;
+	std::vector<std::vector<GLuint>> animations_;
 	std::pair<int, int> animation_frame_ = {0,0};
 	int animation_fps_ = 8;
 //	int next_animation_;

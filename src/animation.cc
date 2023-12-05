@@ -5,24 +5,24 @@
 #include <math.h>
 #include <filesystem>
 
-animation::animation(std::string name)
+animation::animation(std::string name, int x, int y)
 {
     std::string path = name + "/";
     int index_pointer = 0;
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
         std::string animation_path = (entry.path()).string() + "/";
-        std::vector<std::pair<GLuint, std::pair<int, int>>> empty;
+        std::vector<GLuint> empty;
         animations_.emplace_back(empty);
-        
         for (const auto& animation_entry : std::filesystem::directory_iterator(animation_path)) {
             auto frame = LoadTextureEx(((animation_entry.path()).string()).c_str());
-            animations_[index_pointer].emplace_back(frame); 
+            vao_ = LoadVerticesEx(x, y, frame.second.first, frame.second.second);
+            animations_[index_pointer].emplace_back(frame.first);
         }
         index_pointer += 1;
     }
 }
 
-std::pair<GLuint, GLuint> animation::GetFrame(int x, int y)
+GLuint animation::GetFrame()
 {
     int ticks = (int) SDL_GetTicks64();
     int delta_time = ticks - last_timestep_;
@@ -44,11 +44,7 @@ std::pair<GLuint, GLuint> animation::GetFrame(int x, int y)
             }
         }
     }
-    std::pair dim = animations_[animation_frame_.first][animation_frame_.second].second;
-    GLuint vao = LoadVerticesEx(x, y, dim.first, dim.second);
-    GLuint texture = animations_[animation_frame_.first][animation_frame_.second].first;
-    std::pair<GLuint, GLuint> out = { vao, texture };
-    return out;
+    return animations_[animation_frame_.first][animation_frame_.second];
 }
 
 void animation::Setstate(int state)
