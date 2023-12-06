@@ -7,22 +7,22 @@ const float speed = 0.03;
 
 void Player::Controller()
 {
-  if (_keyboard[sdl_scancode_d])
+  if (_keyboard[SDL_SCANCODE_D])
   {
     //_state = player_walk_left;
     _rect.x += speed;
   }
-  if (_keyboard[sdl_scancode_a])
+  if (_keyboard[SDL_SCANCODE_A])
   {
     //_state = player_walk_right;
     _rect.x -= speed;
   }
-  if (_keyboard[sdl_scancode_s])
+  if (_keyboard[SDL_SCANCODE_S])
   {
     //_state = player_walk_down;
     _rect.y += speed;
   }
-  if (_keyboard[sdl_scancode_w])
+  if (_keyboard[SDL_SCANCODE_W])
   {
     //_state = player_walk_up;
     _rect.y -= speed;
