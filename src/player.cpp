@@ -2,54 +2,57 @@
 #include <SDL.h>
 #include <iostream>
 #include <render.h>
-GLuint Player::_player_textures[8] = {};
-const float speed = 0.03;
+GLuint Player::player_textures_[8] = {};
+const float speed = 3;
 
 void Player::Controller()
 {
-  if (_keyboard[SDL_SCANCODE_D])
+  if (keyboard_[SDL_SCANCODE_D])
   {
     //_state = player_walk_left;
-    _rect.x += speed;
+    rect_.x += speed;
   }
-  if (_keyboard[SDL_SCANCODE_A])
+  if (keyboard_[SDL_SCANCODE_A])
   {
     //_state = player_walk_right;
-    _rect.x -= speed;
+    rect_.x -= speed;
   }
-  if (_keyboard[SDL_SCANCODE_S])
+  if (keyboard_[SDL_SCANCODE_S])
   {
     //_state = player_walk_down;
-    _rect.y += speed;
+    rect_.y += speed;
   }
-  if (_keyboard[SDL_SCANCODE_W])
+  if (keyboard_[SDL_SCANCODE_W])
   {
     //_state = player_walk_up;
-    _rect.y -= speed;
+    rect_.y -= speed;
   }
 
 }
 
-Player::Player():_keyboard(SDL_GetKeyboardState(0)), animation_("player", _rect.x, _rect.y)
+Player::Player():keyboard_(SDL_GetKeyboardState(0)), animation_("player", rect_.x, rect_.y)
 {
   std::cout << "Entered Constructor" << std::endl;
-  _rect.x = 0;
-  _rect.y = 0;
+  rect_.x = 0;
+  rect_.y = 0;
   std::cout << "Created Player" << std::endl;
 
 }
 
+const float cameraSpeedX = 400;
+const float cameraSpeedY = 300;
 void Player::Update()
 {
   Controller();
-  camera_x = _rect.x;
-  camera_y = -_rect.y;
+  camera_x = (rect_.x / cameraSpeedX) - 1;
+  camera_y = (( - rect_.y)/ cameraSpeedY) + 1;
 }
 
 void Player::Render()
-{   
-    GLuint frame_tex = animation_.GetFrame();
-    glBindTexture(GL_TEXTURE_2D, frame_tex);
-    RenderTexture(animation_.vao_, frame_tex);
-    glBindVertexArray(0);
+{
+  vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width, animation_.height);
+  GLuint frame_tex = animation_.GetFrame();
+  glBindTexture(GL_TEXTURE_2D, frame_tex);
+  RenderTexture(vao_, frame_tex);
+  glBindVertexArray(0);
 }

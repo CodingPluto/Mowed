@@ -10,15 +10,18 @@
 class Player
 {
 private:
-  static GLuint _player_textures[8];
-  const Uint8* _keyboard;
+  static GLuint player_textures_[8];
+  const Uint8* keyboard_;
   void Controller();
+  float myX = 4;
 public:
-  SDL_FRect _rect = {0,0,0,0};
+  SDL_FRect rect_ = {0,0,0,0};
   Player();
   void Update();
   void Render();
   animation animation_;
+  GLuint vao_;
+
 };
 
 

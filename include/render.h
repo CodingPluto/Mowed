@@ -19,7 +19,7 @@ extern std::vector<GLuint*> vao_cache;
 extern float camera_x;
 extern float camera_y;
 
-GLuint LoadVerticesEx(int raw_x, int raw_y, int raw_width, int raw_height, bool relative = true);
+GLuint LoadVerticesEx(float raw_x, float raw_y, int raw_width, int raw_height);
 //GLuint LoadVertices(GLfloat old_vertices[32]);
 //GLuint LoadTexture(const char imagePath[]);
 void RenderTexture(GLuint vao, GLuint texture);

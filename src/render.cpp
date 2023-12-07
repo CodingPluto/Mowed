@@ -29,7 +29,7 @@ std::pair<GLuint, std::pair<int, int>>LoadTextureEx(const char imagePath[]){
   return std::pair<GLint, std::pair<int, int>>(texture, std::pair<int, int>(_width, _height));
 }
 
-GLuint LoadVerticesEx(int raw_x, int raw_y, int raw_width, int raw_height, bool relative){
+GLuint LoadVerticesEx(float raw_x, float raw_y, int raw_width, int raw_height){
   float adj_x = -1;
   float adj_y = -1;
   adj_x = (2.0f * ((float)raw_x / WIDTH)) - 1.0f;

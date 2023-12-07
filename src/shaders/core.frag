@@ -10,5 +10,8 @@ uniform sampler2D ourTexture1;
 void main()
 {
     // Linearly interpolate between both textures (second texture is only slightly combined)
+    //color.a = 0.1;
     color = texture(ourTexture1, TexCoord);
+    //GL_Color = texturecolor * 1.0/distance(light_position,world_position);
+
 }

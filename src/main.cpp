@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
           break;
         }
     }
-      std::cout << camera_x << " : " << camera_y << std::endl;
+      //std::cout << camera_x << " : " << camera_y << std::endl;
 
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
@@ -105,7 +105,6 @@ int main(int argc, char *argv[])
       glm::mat4 view = glm::mat4(1.0f);
       view = glm::translate(glm::mat4(1.0f), -cameraPosition);
       glm::mat4 viewProjection = projection * view;
-      std::cout << camera_x << " : " << camera_y << std::endl;
       glUniformMatrix4fv(glGetUniformLocation(our_shader.program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
 
       //cameraPosition.x += 0.01;

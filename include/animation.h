@@ -14,7 +14,9 @@ public:
 	GLuint GetFrame();
 	void Setstate(int state);
 	void QueState(int state);
-	GLuint vao_ = NULL;
+	//GLuint vao_ = NULL;
+	float width;
+	float height;
 
 private:
 	std::vector<std::vector<GLuint>> animations_;
