@@ -5,6 +5,7 @@
 
 #include <SDL_OpenGL.h>
 #include <animation.h>
+#include <item.h>
 
 
 class Player
@@ -14,6 +15,7 @@ private:
   const Uint8* keyboard_;
   void Controller();
   float myX = 4;
+  Item * holding_ = nullptr;
 public:
   SDL_FRect rect_ = {0,0,0,0};
   Player();
@@ -21,7 +23,8 @@ public:
   void Render();
   animation animation_;
   GLuint vao_;
-
+  void PickUp(Item* item);
+  void PutDown();
 };
 
 

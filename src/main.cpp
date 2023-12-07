@@ -95,6 +95,14 @@ int main(int argc, char *argv[])
         if (event.type == SDL_QUIT) {
           break;
         }
+        if (event.type == SDL_KEYDOWN) {
+            if (event.key.keysym.sym == SDLK_RETURN) {
+                player.PickUp(can1.Get_Pointer());
+            }
+            if (event.key.keysym.sym == SDLK_BACKSPACE) {
+                player.PutDown();
+            }
+        }
     }
       //std::cout << camera_x << " : " << camera_y << std::endl;
 

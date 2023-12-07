@@ -13,6 +13,7 @@ public:
 	Item* Get_Pointer();
 	void Render();
 	SDL_FRect rect_ = {0, 0, 0, 0};
+	void update();
 protected:
 	animation animation_;
 	GLuint vao_;
