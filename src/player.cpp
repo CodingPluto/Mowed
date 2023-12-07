@@ -36,7 +36,7 @@ Player::Player():keyboard_(SDL_GetKeyboardState(0)), animation_("player", rect_.
   rect_.x = 0;
   rect_.y = 0;
   std::cout << "Created Player" << std::endl;
-
+  
 }
 
 const float cameraSpeedX = 400;
@@ -49,7 +49,7 @@ void Player::Update()
 }
 
 void Player::Render()
-{
+{   
   vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width_, animation_.height_);
   GLuint frame_tex = animation_.GetFrame();
   glBindTexture(GL_TEXTURE_2D, frame_tex);
