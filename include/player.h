@@ -25,6 +25,7 @@ public:
   GLuint vao_;
   void PickUp(Item* item);
   void PutDown();
+  Item* close_ = nullptr;
 };
 
 

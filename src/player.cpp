@@ -27,6 +27,14 @@ void Player::Controller()
     //_state = player_walk_up;
     rect_.y -= speed;
   }
+  if (keyboard_[SDL_SCANCODE_BACKSPACE])
+  {
+      PutDown();
+  }
+  if (keyboard_[SDL_SCANCODE_RETURN])
+  {
+      PickUp(close_);
+  }
 
 }
 
@@ -63,7 +71,7 @@ void Player::Render()
 }
 
 void Player::PickUp(Item* item)
-{
+{     
     holding_ = item;
 }
 

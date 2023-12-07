@@ -95,20 +95,11 @@ int main(int argc, char *argv[])
         if (event.type == SDL_QUIT) {
           break;
         }
-        if (event.type == SDL_KEYDOWN) {
-            if (event.key.keysym.sym == SDLK_RETURN) {
-                player.PickUp(can1.Get_Pointer());
-            }
-            if (event.key.keysym.sym == SDLK_BACKSPACE) {
-                player.PutDown();
-            }
-        }
     }
       //std::cout << camera_x << " : " << camera_y << std::endl;
 
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
-      player.Update();
       our_shader.Use();
       cameraPosition.x = camera_x;
       cameraPosition.y = camera_y;
@@ -119,7 +110,17 @@ int main(int argc, char *argv[])
 
       //cameraPosition.x += 0.01;
       //cameraPosition.y -= 0.01;
+      player.close_ = nullptr;
+      if (player.rect_.x <= can1.rect_.x + 32 && player.rect_.x >= can1.rect_.x - 32)
+      {
+          if (player.rect_.y <= can1.rect_.y + 32 && player.rect_.y >= can1.rect_.y - 32)
+          {
+              player.close_ = can1.Get_Pointer();
+          }
+      }
 
+
+      player.Update();
 
       glActiveTexture(GL_TEXTURE0);
       glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture1" ), 0 );
