@@ -15,8 +15,8 @@ public:
 	void Setstate(int state);
 	void QueState(int state);
 	//GLuint vao_ = NULL;
-	float width;
-	float height;
+	int width_;
+	int height_;
 
 private:
 	std::vector<std::vector<GLuint>> animations_;

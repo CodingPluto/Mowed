@@ -15,8 +15,8 @@ animation::animation(std::string name, int x, int y)
         animations_.emplace_back(empty);
         for (const auto& animation_entry : std::filesystem::directory_iterator(animation_path)) {
             auto frame = LoadTextureEx(((animation_entry.path()).string()).c_str());
-            width = frame.second.first;
-            height = frame.second.second;
+            width_ = frame.second.first;
+            height_ = frame.second.second;
             animations_[index_pointer].emplace_back(frame.first);
         }
         index_pointer += 1;

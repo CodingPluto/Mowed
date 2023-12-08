@@ -27,6 +27,14 @@ void Player::Controller()
     //_state = player_walk_up;
     rect_.y -= speed;
   }
+  if (keyboard_[SDL_SCANCODE_BACKSPACE])
+  {
+      PutDown();
+  }
+  if (keyboard_[SDL_SCANCODE_RETURN])
+  {
+      PickUp(close_);
+  }
 
 }
 
@@ -44,6 +52,12 @@ const float cameraSpeedY = 300;
 void Player::Update()
 {
   Controller();
+  vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width_, animation_.height_);
+  if (holding_ != nullptr) {
+      holding_->rect_.x = rect_.x;
+      holding_->rect_.y = rect_.y;
+      holding_->update();
+  }
   camera_x = (rect_.x / cameraSpeedX) - 1;
   camera_y = (( - rect_.y)/ cameraSpeedY) + 1;
 }
@@ -62,4 +76,14 @@ void Player::Render()
   glBindTexture(GL_TEXTURE_2D, frame_tex);
   RenderTexture(vao_, frame_tex);
   glBindTexture(GL_TEXTURE_2D,0);
+}
+
+void Player::PickUp(Item* item)
+{     
+    holding_ = item;
+}
+
+void Player::PutDown()
+{
+    holding_ = nullptr;
 }

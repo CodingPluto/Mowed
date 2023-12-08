@@ -17,6 +17,7 @@
 #include <thread>
 #include <animation.h>
 #include <grass.h>
+#include <gas-can.h>
 
 //#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
 
@@ -82,6 +83,7 @@ int main(int argc, char *argv[])
     glm::mat4 projection = glm::ortho(-aspect, aspect, -1.0f, 1.0f, zNear, zFar);
     Grass::generate_grass();
     Player player;
+    GasCan can1;
     while (true)
     {
       old_time = current_time;
@@ -93,7 +95,6 @@ int main(int argc, char *argv[])
       //std::cout << camera_x << " : " << camera_y << std::endl;
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
-      player.Update();
       our_shader.Use();
       cameraPosition.x = camera_x;
       cameraPosition.y = camera_y;
