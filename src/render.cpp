@@ -29,6 +29,32 @@ std::pair<GLuint, std::pair<int, int>>LoadTextureEx(const char imagePath[]){
   return std::pair<GLint, std::pair<int, int>>(texture, std::pair<int, int>(_width, _height));
 }
 
+/*
+void UpdateVertices(float raw_x, float raw_y) {
+  // Assuming the sprite occupies the first two vertices in the vertex array
+  float adj_x = -1;
+  float adj_y = -1;
+  adj_x = (2.0f * ((float)raw_x / WIDTH)) - 1.0f;
+  adj_y = -((2.0f * ((float)raw_y / HEIGHT)) - 1.0f);
+  GLfloat vertices[] = {
+    // Positions                                           // Colors                   // Texture Coords
+     adj_x + adj_w,  adj_y,
+     adj_x + adj_w , adj_y + adj_h,
+     adj_x,          adj_y + adj_h,
+     adj_x,          adj_y,
+  };
+
+
+  vertices[0] = newX;
+  vertices[1] = newY;
+
+  // Update the VBO with the new vertex data
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+}*/
+
+
 GLuint LoadVerticesEx(float raw_x, float raw_y, int raw_width, int raw_height){
   float adj_x = -1;
   float adj_y = -1;
@@ -41,10 +67,10 @@ GLuint LoadVerticesEx(float raw_x, float raw_y, int raw_width, int raw_height){
 
   GLfloat vertices[] = {
     // Positions                                           // Colors                   // Texture Coords
-     adj_x + adj_w,  adj_y,          0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
-     adj_x + adj_w , adj_y + adj_h,  0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
-     adj_x,          adj_y + adj_h,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
-     adj_x,          adj_y,          0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left
+     adj_x + adj_w,  adj_y,                             
+     adj_x + adj_w , adj_y + adj_h,                     
+     adj_x,          adj_y + adj_h,                
+     adj_x,          adj_y,                       
   };
 
   GLuint indices[] = {
@@ -66,14 +92,8 @@ GLuint LoadVerticesEx(float raw_x, float raw_y, int raw_width, int raw_height){
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
   // Position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
   glEnableVertexAttribArray(0);
-  // Color attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-  glEnableVertexAttribArray(1);
-  // Texture Coordinate attribute
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-  glEnableVertexAttribArray(2);
   glBindVertexArray(0); // Unbind VAO
 
   vbo_cache.emplace_back(&vbo);
@@ -87,5 +107,6 @@ void RenderTexture(GLuint vao, GLuint texture)
 {
   glBindVertexArray(vao);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  glBindVertexArray(0);
 }
 

@@ -73,10 +73,6 @@ int main(int argc, char *argv[])
     glm::vec3 cameraPosition(0.0f, 0.0f, 0.0f);
 
     SDL_Event event;
-    //Player play
-    //Grass::generate_grass();
-    //Grass grass(40, 40);
-    //animation animation1("grass");
 
     double old_time = 0;
     double current_time = 0;
@@ -95,7 +91,6 @@ int main(int argc, char *argv[])
         }
     }
       //std::cout << camera_x << " : " << camera_y << std::endl;
-
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
       player.Update();
@@ -107,25 +102,10 @@ int main(int argc, char *argv[])
       glm::mat4 viewProjection = projection * view;
       glUniformMatrix4fv(glGetUniformLocation(our_shader.program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
 
-      //cameraPosition.x += 0.01;
-      //cameraPosition.y -= 0.01;
-
-
       glActiveTexture(GL_TEXTURE0);
       glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture1" ), 0 );
       Grass::RenderGrasses();
       player.Render();
-      //Grass::RenderGrasses();
-      //auto vao = LoadVerticesEx(300, 300, test_width, test_height);
-      //Grass::RenderGrasses();
-      //RenderTexture(Grass::grasses[0]->vao, Grass::texture);
-
-
-           //RenderTexture(vao, texture_test);
-      //RenderTexture(player.vao, player.texture);
-      //auto player_frame = player.animation_.GetFrame(player._rect.x, player._rect.y);
-      //RenderTexture(player_frame.first, player_frame.second);
-      //Swap the screen buffers
 
       SDL_GL_SwapWindow(window);
       current_time = SDL_GetTicks();

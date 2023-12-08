@@ -11,10 +11,10 @@ void Grass::generate_grass()
   texture = pair.first;
   width = pair.second.first;
   height = pair.second.second;
-  for (int i = 0; i < 1000; ++i)
+  for (int i = 0; i < 10; ++i)
   {
-    int x = rand() % 8000 - 4000;
-    int y = rand() % 6000 - 3000;
+    int x = rand() % 800 - 400;
+    int y = rand() % 600 - 300;
     Grass *grass = new Grass(x, y);
     grasses.emplace_back(grass);
   }
@@ -36,7 +36,7 @@ void Grass::RenderGrasses()
     //std::cout << "grass rendered!" << std::endl;
     RenderTexture(grasses[i]->vao, texture);
   }
-  glBindVertexArray(0);
+  glBindTexture(GL_TEXTURE_2D,0);
 
 }
 Grass::Grass(float x, float y):x(x), y(y)

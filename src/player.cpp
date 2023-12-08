@@ -36,7 +36,7 @@ Player::Player():keyboard_(SDL_GetKeyboardState(0)), animation_("player", rect_.
   rect_.x = 0;
   rect_.y = 0;
   std::cout << "Created Player" << std::endl;
-
+  vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width, animation_.height);
 }
 
 const float cameraSpeedX = 400;
@@ -48,11 +48,18 @@ void Player::Update()
   camera_y = (( - rect_.y)/ cameraSpeedY) + 1;
 }
 
+
+
+
 void Player::Render()
 {
-  vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width, animation_.height);
   GLuint frame_tex = animation_.GetFrame();
+
+  //glBindVertexArray(vao_);
+  //glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+
   glBindTexture(GL_TEXTURE_2D, frame_tex);
   RenderTexture(vao_, frame_tex);
-  glBindVertexArray(0);
+  glBindTexture(GL_TEXTURE_2D,0);
 }
