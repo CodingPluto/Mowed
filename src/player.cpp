@@ -2,9 +2,10 @@
 #include <SDL.h>
 #include <iostream>
 #include <render.h>
+#include <Shader.h>
 GLuint Player::player_textures_[8] = {};
 const float speed = 3;
-
+float z = 0;
 void Player::Controller()
 {
 
@@ -27,6 +28,15 @@ void Player::Controller()
   {
     //_state = player_walk_up;
     rect_.y -= speed;
+  }
+  if (keyboard_[SDL_SCANCODE_EQUALS])
+  {
+    //_state = player_walk_up;
+    z += 0.1;
+  }
+  if (keyboard_[SDL_SCANCODE_MINUS])
+  {
+    if (z > 0) z -= 0.1;
   }
   if (keyboard_[SDL_SCANCODE_BACKSPACE])
   {
@@ -53,7 +63,6 @@ const float cameraSpeedY = 300;
 void Player::Update()
 {
   Controller();
-  vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width_, animation_.height_);
   if (holding_ != nullptr) {
       holding_->rect_.x = rect_.x;
       holding_->rect_.y = rect_.y;
@@ -63,17 +72,24 @@ void Player::Update()
   camera_y = (( - rect_.y)/ cameraSpeedY) + 1;
 }
 
-
-
+float x = 800;
+float y = 600;
 
 void Player::Render()
 {
+  x += 1;
+  y += 1;
+  float ndcX = (2.0f * x) / WIDTH - 1.0f;
+  float ndcY = 1.0f - (2.0f * y) / HEIGHT;
+  glm::vec4 ndcPosition(ndcX, ndcY, z, 1.0f);
+  glm::mat4 inverseViewProjection = glm::inverse(viewProjection);
+  glm::vec4 worldPosition = inverseViewProjection * (ndcPosition / ndcPosition.w);
+
+  glm::mat4 player_model = glm::translate(glm::mat4(1.0f), glm::vec3(worldPosition));
+  //glm::mat4 player_model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f,1.0f,1.0f));
+  glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(player_model));
+
   GLuint frame_tex = animation_.GetFrame();
-
-  glBindVertexArray(vao_);
-  //glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-
   glBindTexture(GL_TEXTURE_2D, frame_tex);
   RenderTexture(vao_, frame_tex);
   glBindTexture(GL_TEXTURE_2D,0);

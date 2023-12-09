@@ -13,7 +13,7 @@
 class Shader{ 
 public:
   GLuint program;
-
+  static Shader *shader_program;
   void Use()
   {
     glUseProgram(program);
