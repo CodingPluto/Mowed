@@ -7,6 +7,7 @@ const float speed = 3;
 
 void Player::Controller()
 {
+
   if (keyboard_[SDL_SCANCODE_D])
   {
     //_state = player_walk_left;
@@ -44,7 +45,7 @@ Player::Player():keyboard_(SDL_GetKeyboardState(0)), animation_("player", rect_.
   rect_.x = 0;
   rect_.y = 0;
   std::cout << "Created Player" << std::endl;
-  vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width, animation_.height);
+  vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width_, animation_.height_);
 }
 
 const float cameraSpeedX = 400;
@@ -69,7 +70,7 @@ void Player::Render()
 {
   GLuint frame_tex = animation_.GetFrame();
 
-  //glBindVertexArray(vao_);
+  glBindVertexArray(vao_);
   //glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 

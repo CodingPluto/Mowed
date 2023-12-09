@@ -107,6 +107,8 @@ int main(int argc, char *argv[])
       glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture1" ), 0 );
       Grass::RenderGrasses();
       player.Render();
+      //player.Update();
+      //can1.Render();
 
       SDL_GL_SwapWindow(window);
       current_time = SDL_GetTicks();
