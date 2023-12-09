@@ -12,5 +12,5 @@ void main()
                                     vec2(0.0f, 0.0f),
                                     vec2(0.0f, 1.0f));
     gl_Position = viewProjection * model * vec4(position, 1.0f, 1.0f);
-    TexCoord = vec2(texCoord[gl_VertexID].x, 1.0 - texCoord[gl_VertexID].y);
+    TexCoord = vec2(texCoord[gl_VertexID].x,1.0 - texCoord[gl_VertexID].y);
 }

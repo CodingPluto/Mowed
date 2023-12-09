@@ -4,7 +4,7 @@
 #include <render.h>
 #include <Shader.h>
 GLuint Player::player_textures_[8] = {};
-const float speed = 3;
+const float speed = 30;
 float z = 0;
 void Player::Controller()
 {

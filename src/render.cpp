@@ -66,15 +66,16 @@ GLuint LoadVerticesEx(float raw_x, float raw_y, int raw_width, int raw_height){
   adj_h = -((2.0f * ((float)raw_height / HEIGHT)));
 
   GLfloat vertices[] = {
+    
     // Positions                                           // Colors                   // Texture Coords
-     adj_x + adj_w,  adj_y,                             
-     adj_x + adj_w , adj_y + adj_h,                     
-     adj_x,          adj_y + adj_h,                
-     adj_x,          adj_y,                       
+     adj_x + adj_w,  adj_y,
+     adj_x + adj_w , adj_y + adj_h,
+     adj_x,          adj_y + adj_h,
+     adj_x,          adj_y,
   };
 
   GLuint indices[] = {
-      0, 1, 3, // First Triangle
+      3, 0, 1, // First Triangle
       1, 2, 3  // Second Triangle
   };
   /////////////////////// Creatng Buffers //////////////////////
@@ -87,10 +88,10 @@ GLuint LoadVerticesEx(float raw_x, float raw_y, int raw_width, int raw_height){
   // vbo
     /////////////////////// Setting Attributes //////////////////////
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
   // ebo
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
   // Position attribute
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
   glEnableVertexAttribArray(0);
