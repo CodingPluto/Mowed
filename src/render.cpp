@@ -3,7 +3,7 @@
  std::vector <GLuint*> vbo_cache;
 
  std::vector<GLuint*> ebo_cache;
-
+ glm::mat4 viewProjection;
  std::vector<GLuint*> vao_cache;
  float camera_x;
  float camera_y;

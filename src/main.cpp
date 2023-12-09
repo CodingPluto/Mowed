@@ -20,6 +20,7 @@
 #include <gas-can.h>
 
 //#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
+Shader* Shader::shader_program = nullptr;
 
 void GetOpenGLErrors();
 int main(int argc, char *argv[])
@@ -52,7 +53,8 @@ int main(int argc, char *argv[])
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-    Shader our_shader( "core.vs", "core.frag" );
+    Shader shader = Shader("core.vs", "core.frag");
+    Shader::shader_program = &shader;
 
 
 
@@ -92,19 +94,25 @@ int main(int argc, char *argv[])
           break;
         }
     }
+      player.Update();
       //std::cout << camera_x << " : " << camera_y << std::endl;
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
-      our_shader.Use();
+      Shader::shader_program->Use();
       cameraPosition.x = camera_x;
       cameraPosition.y = camera_y;
-      glm::mat4 view = glm::mat4(1.0f);
-      view = glm::translate(glm::mat4(1.0f), -cameraPosition);
-      glm::mat4 viewProjection = projection * view;
-      glUniformMatrix4fv(glGetUniformLocation(our_shader.program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
+      glm::mat4 view = glm::translate(glm::mat4(1.0f), -cameraPosition);
+      viewProjection = projection * view;
+      glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
+
+
+      glm::mat4 default_model = glm::mat4(1.0f);
+      default_model = glm::translate(default_model, glm::vec3(0.0f, 0.0f, 0.0f));
+      glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(default_model));
+
 
       glActiveTexture(GL_TEXTURE0);
-      glUniform1i( glGetUniformLocation( our_shader.program, "ourTexture1" ), 0 );
+      glUniform1i( glGetUniformLocation(Shader::shader_program->program, "ourTexture1" ), 0 );
       Grass::RenderGrasses();
       player.Render();
 

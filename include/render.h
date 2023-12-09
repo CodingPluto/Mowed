@@ -13,7 +13,7 @@ extern float camera_x, camera_y;
 extern std::vector <GLuint*> vbo_cache;
 
 extern std::vector<GLuint*> ebo_cache;
-
+extern glm::mat4 viewProjection;
 extern std::vector<GLuint*> vao_cache;
 
 extern float camera_x;

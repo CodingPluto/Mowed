@@ -6,7 +6,9 @@
 #include <SDL_OpenGL.h>
 #include <animation.h>
 #include <item.h>
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Player
 {
@@ -16,6 +18,7 @@ private:
   void Controller();
   float myX = 4;
   Item * holding_ = nullptr;
+  glm::mat4 player_model;
 public:
   SDL_FRect rect_ = {0,0,0,0};
   Player();
