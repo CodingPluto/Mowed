@@ -8,6 +8,7 @@ const float speed = 3;
 float z = 0;
 void Player::Controller()
 {
+
   if (keyboard_[SDL_SCANCODE_D])
   {
     //_state = player_walk_left;
