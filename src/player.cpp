@@ -71,21 +71,26 @@ void Player::Update()
   camera_y = (( - rect_.y)/ cameraSpeedY) + 1;
 }
 
-float x = 800;
-float y = 600;
 
 void Player::Render()
 {
-  x += 1;
-  y += 1;
+  float x = (WIDTH / 2.0f  - (15.0f / 2)) + 295;// 1095
+  float y = (HEIGHT / 2.0f - (45.0f / 2)) + 290;// 890
+  // 890 - 845 = 45
+  // 1095 - 1080 = 15
+  /*
+  * Screen Dimensions:
+  * WIDTH: 1095
+  * HEIGHT: 890
+  * startX: 295
+  */
   float ndcX = (2.0f * x) / WIDTH - 1.0f;
   float ndcY = 1.0f - (2.0f * y) / HEIGHT;
   glm::vec4 ndcPosition(ndcX, ndcY, z, 1.0f);
   glm::mat4 inverseViewProjection = glm::inverse(viewProjection);
   glm::vec4 worldPosition = inverseViewProjection * (ndcPosition / ndcPosition.w);
-
   glm::mat4 player_model = glm::translate(glm::mat4(1.0f), glm::vec3(worldPosition));
-  //glm::mat4 player_model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f,1.0f,1.0f));
+  //glm::mat4 player_model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,0.0f));
   glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(player_model));
 
   GLuint frame_tex = animation_.GetFrame();

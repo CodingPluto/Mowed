@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
 
     //////////////////////// Create Window //////////////////////
-    SDL_Window* window = SDL_CreateWindow("OpenGL", 300, 300, WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
+    SDL_Window* window = SDL_CreateWindow("OpenGL", 300, 50, WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(window);
 
     //////////////////////// INIT GLEW //////////////////////
@@ -113,8 +113,11 @@ int main(int argc, char *argv[])
 
       glActiveTexture(GL_TEXTURE0);
       glUniform1i( glGetUniformLocation(Shader::shader_program->program, "ourTexture1" ), 0 );
-      Grass::RenderGrasses();
+
+      glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
       player.Render();
+      glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.8f);
+      Grass::RenderGrasses();
 
       SDL_GL_SwapWindow(window);
       current_time = SDL_GetTicks();
