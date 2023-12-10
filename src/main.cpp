@@ -112,7 +112,8 @@ int main(int argc, char *argv[])
 
 
       glActiveTexture(GL_TEXTURE0);
-      glUniform1i( glGetUniformLocation(Shader::shader_program->program, "ourTexture1" ), 0 );
+      glUniform1i( glGetUniformLocation(Shader::shader_program->program, "ourTexture1" ), 0.0f);
+
 
       glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
       player.Render();
