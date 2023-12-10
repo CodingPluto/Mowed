@@ -2,7 +2,8 @@
 #include <render.h>
 #include <cstdlib>
 #include <Shader.h>
-const int grasses_number = 100000;
+#include <chrono>
+const int grasses_number = 200000;
 std::vector<Grass*> Grass::grasses;
 GLuint Grass::texture;
 GLuint vao_test;
@@ -20,10 +21,11 @@ void Grass::generate_grass()
   float adj_h = -1;
   adj_w = (2.0f * ((float)width / WIDTH));
   adj_h = -((2.0f * ((float)height / HEIGHT)));
+  srand(static_cast<int>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())));
   for (int i = 0; i < grasses_number; ++i)
   {
-    int x = rand() % 10000 - WIDTH/2;
-    int y = rand() % 10000 - HEIGHT/2;
+    int x = rand() % 20000 - 10000;
+    int y = rand() % 20000 - 10000;
     float adj_x = -1;
     float adj_y = -1;
     adj_x = (2.0f * ((float) x / WIDTH)) - 1.0f;

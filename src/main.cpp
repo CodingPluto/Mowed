@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
 
       glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
       player.Render();
-      glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.8f);
+      glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.9f);
       Grass::RenderGrasses();
 
       SDL_GL_SwapWindow(window);
