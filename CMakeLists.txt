@@ -26,7 +26,7 @@ add_executable(MowerExecutable
 "libraries/SOIL2-master/src/SOIL2/image_DXT.c" "libraries/SOIL2-master/src/SOIL2/image_helper.c" "libraries/SOIL2-master/src/SOIL2/SOIL2.c" "libraries/SOIL2-master/src/SOIL2/wfETC.c"
 "src/main.cpp"
 "include/Shader.h"
-"src/player.cpp" "include/player.h" "include/render.h" "src/render.cpp" "src/grass.cpp" "include/grass.h" "include/animation.h"  "src/animation.cc" "include/item.h" "src/item.cc" "include/gas-can.h" "src/gas-can.cc")
+"src/player.cpp" "include/player.h" "include/render.h" "src/render.cpp" "src/grass.cpp" "include/grass.h" "include/animation.h"  "src/animation.cc" "include/item.h" "src/item.cc" "include/gas-can.h" "src/gas-can.cc"  )
 
 target_include_directories(MowerExecutable PUBLIC "include" ${SDL2_INCLUDE_DIRS} "libraries/glm/")
 target_link_libraries(MowerExecutable PRIVATE GLEW::GLEW ${OPENGL_gl_LIBRARY} ${SDL2_LIBRARIES} SDL2_image::SDL2_image ${GLM_INCLUDE_DIR})

@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
     Grass::generate_grass();
     Player player;
     GasCan can1;
+    //Mower mower;
     while (true)
     {
       old_time = current_time;
@@ -95,8 +96,8 @@ int main(int argc, char *argv[])
         }
     }
       player.Update();
-      //std::cout << camera_x << " : " << camera_y << std::endl;
-      glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+      glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
       Shader::shader_program->Use();
       cameraPosition.x = camera_x;
@@ -117,6 +118,7 @@ int main(int argc, char *argv[])
 
       glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
       player.Render();
+      //.Render();
       glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.9f);
       Grass::RenderGrasses();
 

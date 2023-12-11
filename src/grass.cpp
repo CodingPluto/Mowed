@@ -3,7 +3,8 @@
 #include <cstdlib>
 #include <Shader.h>
 #include <chrono>
-const int grasses_number = 200000;
+const int grasses_number = 300000;
+GLuint Grass::vbo;
 std::vector<Grass*> Grass::grasses;
 GLuint Grass::texture;
 GLuint vao_test;
@@ -21,11 +22,11 @@ void Grass::generate_grass()
   float adj_h = -1;
   adj_w = (2.0f * ((float)width / WIDTH));
   adj_h = -((2.0f * ((float)height / HEIGHT)));
-  srand(static_cast<int>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())));
+  srand(0); // static_cast<int>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())));
   for (int i = 0; i < grasses_number; ++i)
   {
-    int x = rand() % 20000 - 10000;
-    int y = rand() % 20000 - 10000;
+    int x = rand() % 200000 - 100;
+    int y = rand() % 200000 - 100;
     float adj_x = -1;
     float adj_y = -1;
     adj_x = (2.0f * ((float) x / WIDTH)) - 1.0f;
@@ -56,7 +57,8 @@ void Grass::generate_grass()
     //grasses.emplace_back(grass);
 
   }
-  GLuint vbo, vao, ebo;
+
+  GLuint vao, ebo;
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vbo);
   glGenBuffers(1, &ebo);
@@ -65,10 +67,10 @@ void Grass::generate_grass()
   // vbo
     /////////////////////// Setting Attributes //////////////////////
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * (4 * 2) * grasses_number, vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * (4 * 2) * grasses_number, vertices, GL_DYNAMIC_DRAW);
   // ebo
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * grasses_number,indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * grasses_number,indices, GL_DYNAMIC_DRAW);
   // Position attribute
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
   glEnableVertexAttribArray(0);
@@ -95,8 +97,34 @@ void Grass::RenderGrasses()
   glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(grass_model));
 
 
-  //glActiveTexture(GL_TEXTURE0);
-  //glBindTexture(GL_TEXTURE_2D, texture);
+
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  float adj_w = -1;
+  float adj_h = -1;
+  adj_w = (2.0f * ((float)width / WIDTH));
+  adj_h = -((2.0f * ((float)height / HEIGHT)));
+  int x = rand() % 1000 - 1000;
+  int y = rand() % 1000;
+  float adj_x = -1;
+  float adj_y = -1;
+  adj_x = (2.0f * ((float)x / WIDTH)) - 1.0f;
+  adj_y = -((2.0f * ((float)y / HEIGHT)) - 1.0f);
+  float replacementVertices[8] = {};
+  replacementVertices[0] = adj_x + adj_w;
+  replacementVertices[1] = adj_y;
+
+  replacementVertices[2] = adj_x + adj_w;
+  replacementVertices[3] = adj_y + adj_h;
+
+  replacementVertices[4] = adj_x;
+  replacementVertices[5] = adj_y + adj_h;
+
+  replacementVertices[6] = adj_x;
+  replacementVertices[7] = adj_y;
+  glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 8) * (rand() % grasses_number), sizeof(replacementVertices), replacementVertices);
+
+
   glBindTextureUnit(0, texture);
   glBindVertexArray(vao_test);
   glDrawElements(GL_TRIANGLES, 6 * grasses_number, GL_UNSIGNED_INT, nullptr);
