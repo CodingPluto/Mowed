@@ -93,9 +93,8 @@ void Player::Update()
   }
 
   if (holding_ != nullptr) {
-      holding_->rect_.x = rect_.x;
-      holding_->rect_.y = rect_.y;
-      holding_->update();
+      holding_->rect_.x = (rect_.x + starting_position.x + (WIDTH/2));
+      holding_->rect_.y = (rect_.y + starting_position.y + (HEIGHT/2));
   }
   float adj_w = -1;
   float adj_h = -1;
@@ -135,8 +134,8 @@ void Player::PutDown()
 int Player::GetDistanceToItem(Item* item)
 {
     std::pair<int, int> buffer_vector;
-    buffer_vector.first =  item->rect_.x - rect_.x;
-    buffer_vector.second =  item->rect_.y - rect_.y;
+    buffer_vector.first =  item->rect_.x - (rect_.x + starting_position.x + (WIDTH / 2));
+    buffer_vector.second =  item->rect_.y - (rect_.y + starting_position.y + (HEIGHT / 2));
     int sum = (buffer_vector.first * buffer_vector.first) + (buffer_vector.second * buffer_vector.second);
     int norm = sqrt(sum);
     return norm;

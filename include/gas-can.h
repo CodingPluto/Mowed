@@ -6,7 +6,7 @@
 class GasCan : public Item
 {
 public:
-	GasCan();
+	GasCan(int x, int y);
 private:
 };
 
