@@ -6,6 +6,8 @@
 #include <vector>
 #include <item.h>
 
+
+
 class Mower
 {
 public:
@@ -15,7 +17,7 @@ public:
 	void Render();
 	void Update();
 private:
-	Item target_;
+	//Item *target_ = nullptr;
 };
 
 
