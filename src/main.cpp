@@ -44,10 +44,10 @@ int main(int argc, char *argv[])
     }
     //std::cout << "Monitor: " << "w: " << monitor_dimensions.w << "h: " << monitor_dimensions.h << std::endl;
 
-    SDL_Window* window = SDL_CreateWindow("OpenGL", 0, 0, monitor_dimensions.w, monitor_dimensions.h, SDL_WINDOW_OPENGL);//SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP);
+    SDL_Window* window = SDL_CreateWindow("OpenGL", 0, 25, monitor_dimensions.w, monitor_dimensions.h - 25, SDL_WINDOW_OPENGL);//SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP);
     SDL_GLContext context = SDL_GL_CreateContext(window);
     WIDTH = monitor_dimensions.w;
-    HEIGHT = monitor_dimensions.h;
+    HEIGHT = monitor_dimensions.h -25;
     //////////////////////// INIT GLEW //////////////////////
     glewExperimental = GL_TRUE;
     if (GLEW_OK != glewInit()) {
@@ -100,6 +100,11 @@ int main(int argc, char *argv[])
         }
         player.Update();
         can1.update();
+
+        if (player.GetDistanceToItem(can1.Get_Pointer()) <= 10,000) {
+            player.close_ = can1.Get_Pointer();
+        }
+
         glClearColor(0.03f, 0.1f, 0.18f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         Shader::shader_program->Use();
@@ -108,6 +113,7 @@ int main(int argc, char *argv[])
         glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraPosition.x, -cameraPosition.y, 0.0f));
         //std::cout << "Camera X: " << cameraPosition.x  << ", Camera Y: " << cameraPosition.y << std::endl;
         viewProjection = projection * view;
+
 
         glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
 

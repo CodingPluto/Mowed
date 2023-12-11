@@ -131,3 +131,13 @@ void Player::PutDown()
 {
     holding_ = nullptr;
 }
+
+int Player::GetDistanceToItem(Item* item)
+{
+    std::pair<int, int> buffer_vector;
+    buffer_vector.first =  item->rect_.x - rect_.x;
+    buffer_vector.second =  item->rect_.y - rect_.y;
+    int sum = (buffer_vector.first * buffer_vector.first) + (buffer_vector.second * buffer_vector.second);
+    int norm = sqrt(sum);
+    return norm;
+}

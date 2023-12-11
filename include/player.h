@@ -31,6 +31,7 @@ public:
   void PickUp(Item* item);
   void PutDown();
   Item* close_ = nullptr;
+  int GetDistanceToItem(Item* item);
 };
 
 
