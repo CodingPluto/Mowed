@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f);
     Grass::generate_grass();
     Player player(5250, 5250);
-    std::vector<Item> items = { GasCan(5200, 5250), GasCan(5300, 5250) };
+    std::vector<Item*> items = { &GasCan(5200, 5250), &GasCan(5300, 5250) };
     
     //Mower mower;
     auto time_at_frame_end = std::chrono::system_clock::now();
@@ -100,9 +100,9 @@ int main(int argc, char *argv[])
           break;
         }
         player.close_ = nullptr;
-        for (Item i : items) {
-            if (player.GetDistanceToItem(i.Get_Pointer()) <= 50) {
-                player.close_ = i.Get_Pointer();
+        for (Item* i : items) {
+            if (player.GetDistanceToItem(i) <= 50) {
+                player.close_ = i;
             }
         }
         player.Update();
@@ -122,8 +122,8 @@ int main(int argc, char *argv[])
         glm::mat4 default_model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f,1.0f,0));
         SetModel(default_model);
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
-        for (auto i :items) {
-            i.Render();
+        for (Item* i : items) {
+            i -> Render();
         }
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.9f);
         player.Render();
