@@ -47,10 +47,10 @@ GLuint LoadVerticesEx(float raw_x, float raw_y, int raw_width, int raw_height){
   GLfloat vertices[] = {
     
     // Positions                                           // Colors                   // Texture Coords
-     adj_x + adj_w,  adj_y,
-     adj_x + adj_w , adj_y + adj_h,
-     adj_x,          adj_y + adj_h,
-     adj_x,          adj_y,
+     adj_x + adj_w,  adj_y, -1.0f,
+     adj_x + adj_w , adj_y + adj_h, -1.0f,
+     adj_x,          adj_y + adj_h, -1.0f,
+     adj_x,          adj_y, -1.0f,
   };
 
   GLuint indices[] = {
@@ -72,7 +72,7 @@ GLuint LoadVerticesEx(float raw_x, float raw_y, int raw_width, int raw_height){
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
   // Position attribute
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
   glEnableVertexAttribArray(0);
   glBindVertexArray(0); // Unbind VAO
 
@@ -95,7 +95,6 @@ glm::vec2 ScreenCoordinatesConvert(float x, float y)
   float adj_y = -1;
   adj_x = (2.0f * ((float)(x) / WIDTH)) - 1.0f;
   adj_y = -((2.0f * ((float)(y) / HEIGHT)) - 1.0f);
-
   return glm::vec2(adj_x, adj_y);
 }
 

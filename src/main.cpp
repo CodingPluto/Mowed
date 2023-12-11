@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
         can1.Render();
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.9f);
         player.Render();
-        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.4f);
+        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
         Grass::RenderGrasses();
         SDL_GL_SwapWindow(window);
         current_time = SDL_GetTicks();
