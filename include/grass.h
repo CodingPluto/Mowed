@@ -8,6 +8,7 @@
 class Grass
 {
 private:
+  static GLuint vbo;
   float x, y;
 public:
   static void generate_grass();
