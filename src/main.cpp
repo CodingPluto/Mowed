@@ -79,7 +79,9 @@ int main(int argc, char *argv[])
     glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f);
     Grass::generate_grass();
     Player player(5250, 5250);
-    std::vector<Item*> items = { &GasCan(5200, 5250), &GasCan(5300, 5250) };
+    GasCan gasCan1(5200, 5250);
+    GasCan gasCan2(5200, 5250);
+    std::vector<Item*> items = { &gasCan1, &gasCan2};
     
     //Mower mower;
     auto time_at_frame_end = std::chrono::system_clock::now();
