@@ -6,4 +6,5 @@ uniform float opacity;
 void main()
 {
     color = texture(u_Texture, TexCoord) * opacity;    
+    //color.r += 0.02;
 }

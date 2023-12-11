@@ -36,9 +36,18 @@ int main(int argc, char *argv[])
 
 
     //////////////////////// Create Window //////////////////////
-    SDL_Window* window = SDL_CreateWindow("OpenGL", 300, 50, WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
-    SDL_GLContext context = SDL_GL_CreateContext(window);
+    SDL_DisplayMode monitor_dimensions;
+    if (SDL_GetCurrentDisplayMode(0, &monitor_dimensions) != 0) {
+      std::cerr << "SDL_GetCurrentDisplayMode failed: " << SDL_GetError() << std::endl;
+      SDL_Quit();
+      return 1;
+    }
+    //std::cout << "Monitor: " << "w: " << monitor_dimensions.w << "h: " << monitor_dimensions.h << std::endl;
 
+    SDL_Window* window = SDL_CreateWindow("OpenGL", 0, 0, monitor_dimensions.w, monitor_dimensions.h, SDL_WINDOW_OPENGL);//SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP);
+    SDL_GLContext context = SDL_GL_CreateContext(window);
+    WIDTH = monitor_dimensions.w;
+    HEIGHT = monitor_dimensions.h;
     //////////////////////// INIT GLEW //////////////////////
     glewExperimental = GL_TRUE;
     if (GLEW_OK != glewInit()) {
@@ -56,18 +65,6 @@ int main(int argc, char *argv[])
     Shader shader = Shader("core.vs", "core.frag");
     Shader::shader_program = &shader;
 
-
-
-
-
-    /////////////////////// Vertex Data //////////////////////
-    //auto texture_png = load_texture("mower.png");
-    //auto pair = LoadTextureEx("test_image.jpg");
-    //auto texture_test = pair.first;
-    //int test_width = pair.second.first;
-    //int test_height = pair.second.second;
-    //auto vao = LoadVerticesEx(300, 300, test_width, test_height);
-
     //////////////////////////////////////////////////////////////////////////
     //////////////////////////////// Game Loop ///////////////////////////////
     //////////////////////////////////////////////////////////////////////////
@@ -76,15 +73,13 @@ int main(int argc, char *argv[])
     glm::vec3 cameraPosition(0.0f, 0.0f, 0.0f);
 
     SDL_Event event;
-
+    auto keyboard = SDL_GetKeyboardState(0);
     double old_time = 0;
     double current_time = 0;
     double delta_time = 0;
-    float aspect = (float)WIDTH / HEIGHT;
-    float zNear = 1.0f; float zFar = -1.0f;
-    glm::mat4 projection = glm::ortho(-aspect, aspect, -1.0f, 1.0f, zNear, zFar);
+    glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f);
     Grass::generate_grass();
-    Player player;
+    Player player(5250,5250);
     GasCan can1;
     //Mower mower;
     auto time_at_frame_end = std::chrono::system_clock::now();
@@ -99,32 +94,35 @@ int main(int argc, char *argv[])
             break;
           }
         }
+        if (keyboard[SDL_SCANCODE_ESCAPE] || ((keyboard[SDL_SCANCODE_LCTRL] || keyboard[SDL_SCANCODE_RCTRL]) && keyboard[SDL_SCANCODE_W]))
+        {
+          break;
+        }
         player.Update();
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        can1.update();
+        glClearColor(0.03f, 0.1f, 0.18f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         Shader::shader_program->Use();
         cameraPosition.x = camera_x;
         cameraPosition.y = camera_y;
-        glm::mat4 view = glm::translate(glm::mat4(1.0f), -cameraPosition);
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraPosition.x, -cameraPosition.y, 0.0f));
+        //std::cout << "Camera X: " << cameraPosition.x  << ", Camera Y: " << cameraPosition.y << std::endl;
         viewProjection = projection * view;
+
         glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
-        glm::mat4 default_model = glm::mat4(1.0f);
-        default_model = glm::translate(default_model, glm::vec3(0.0f, 0.0f, 0.0f));
+
+        glm::mat4 default_model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f,1.0f,0));
         SetModel(default_model);
-        can1.update();
-        glActiveTexture(GL_TEXTURE0);
-        glUniform1i(glGetUniformLocation(Shader::shader_program->program, "ourTexture1"), 0.0f);
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
-        player.Render();
         can1.Render();
-        //.Render();
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.9f);
+        player.Render();
+        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.4f);
         Grass::RenderGrasses();
         SDL_GL_SwapWindow(window);
         current_time = SDL_GetTicks();
         delta_time = (current_time - old_time) * pow(10, -3);
         GetOpenGLErrors();
-        //std::cout << delta_time << std::endl;
         std::cout << "Delta Time: " << delta_time << std::endl;
 
         time_at_frame_end = std::chrono::system_clock::now();

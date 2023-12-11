@@ -15,7 +15,8 @@ Item* Item::Get_Pointer()
 
 void Item::Render()
 {	
-  glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(ScreenCoordinatesConvert(0,0)));
+  auto vec = ScreenCoordinatesConvert(rect_.x, rect_.y);
+  glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(vec.x, vec.y,0.0f));
   glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
 	GLuint frame_tex = animation_.GetFrame();
@@ -27,17 +28,7 @@ void Item::Render()
 
 void Item::update()
 {
-  float x = 1000;// 1095
-  float y = 1000;// 890
-  // 890 - 845 = 45
-  // 1095 - 1080 = 15
-  /*
-  * Screen Dimensions:
-  * WIDTH: 1095
-  * HEIGHT: 890
-  * startX: 295
-  */
-  
-  //glm::mat4 player_model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,0.0f));
+  rect_.x = 5250 + WIDTH / 2;
+	rect_.y = 5250 + HEIGHT / 2;
 
  }

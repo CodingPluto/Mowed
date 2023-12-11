@@ -8,6 +8,7 @@
  std::vector<GLuint*> vao_cache;
  float camera_x;
  float camera_y;
+ unsigned int WIDTH, HEIGHT;
 
 std::pair<GLuint, std::pair<int, int>>LoadTextureEx(const char imagePath[]){
   GLuint texture;
@@ -88,15 +89,14 @@ void RenderTexture(GLuint vao, GLuint texture)
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }
-glm::vec4 ScreenCoordinatesConvert(float x, float y)
+glm::vec2 ScreenCoordinatesConvert(float x, float y)
 {
-  x += 295;
-  y += 290;
-  float ndcX = (2.0f * x) / WIDTH - 1.0f;
-  float ndcY = 1.0f - (2.0f * y) / HEIGHT;
-  glm::vec4 ndcPosition(ndcX, ndcY, 0.0f, 1.0f);
-  glm::mat4 inverseViewProjection = glm::inverse(viewProjection);
-  return inverseViewProjection * (ndcPosition / ndcPosition.w);
+  float adj_x = -1;
+  float adj_y = -1;
+  adj_x = (2.0f * ((float)(x) / WIDTH)) - 1.0f;
+  adj_y = -((2.0f * ((float)(y) / HEIGHT)) - 1.0f);
+
+  return glm::vec2(adj_x, adj_y);
 }
 
 void SetModel(const glm::mat4& model)

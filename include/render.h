@@ -8,7 +8,7 @@
 #include <SDL_opengl.h>
 #include <iostream>
 #include <vector>
-const int WIDTH = 800, HEIGHT = 600;
+extern unsigned int WIDTH, HEIGHT;
 extern float camera_x, camera_y;
 extern std::vector <GLuint*> vbo_cache;
 
@@ -26,5 +26,5 @@ void RenderTexture(GLuint vao, GLuint texture);
 std::pair<GLuint,std::pair<int,int>>LoadTextureEx(const char imagePath[]);
 //std::pair<GLuint, GLuint>LoadTextureAndVertices(const char imagePath[], int raw_x, int raw_y);
 #endif //RENDER_H
-glm::vec4 ScreenCoordinatesConvert(float x, float y);
+glm::vec2 ScreenCoordinatesConvert(float x, float y);
 void SetModel(const glm::mat4 &model);

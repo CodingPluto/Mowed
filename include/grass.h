@@ -5,6 +5,11 @@
 #include <SDL.h>
 #include <vector>
 
+#define GRASS_NUMBER 300000
+#define GRASS_BORDER_X 10000
+#define GRASS_BORDER_Y 10000
+#define GRASS_BORDER_OFFSET_X 0 
+#define GRASS_BORDER_OFFSET_Y 0
 class Grass
 {
 private:

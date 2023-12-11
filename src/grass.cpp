@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <Shader.h>
 #include <chrono>
-const int grasses_number = 300000;
+const int grasses_number = GRASS_NUMBER;
 GLuint Grass::vbo;
 std::vector<Grass*> Grass::grasses;
 GLuint Grass::texture;
@@ -25,8 +25,16 @@ void Grass::generate_grass()
   srand(0); // static_cast<int>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())));
   for (int i = 0; i < grasses_number; ++i)
   {
-    int x = rand() % 20000 - 100;
-    int y = rand() % 20000 - 100;
+    bool generating = true;
+    int x;
+    int y;
+    while (generating)
+    {
+      x = rand() % (GRASS_BORDER_X - width) - GRASS_BORDER_OFFSET_X;
+      y = rand() % (GRASS_BORDER_Y - height) - GRASS_BORDER_OFFSET_Y;
+      if (x < 5000 || (y < 5000 || y > 5500)) generating = false;
+      if (x > 5500 || (y < 5000 || y > 5500)) generating = false;
+    }
     float adj_x = -1;
     float adj_y = -1;
     adj_x = (2.0f * ((float) x / WIDTH)) - 1.0f;
@@ -121,7 +129,7 @@ void Grass::RenderGrasses()
 
   replacementVertices[6] = adj_x;
   replacementVertices[7] = adj_y;
-  glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 8) * (rand() % grasses_number), sizeof(replacementVertices), replacementVertices);
+  //glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 8) * (rand() % grasses_number), sizeof(replacementVertices), replacementVertices);
 
 
   glBindTextureUnit(0, texture);
