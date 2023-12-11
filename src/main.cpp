@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     Grass::generate_grass();
     Player player(5250, 5250);
     GasCan gasCan1(5200, 5250);
-    GasCan gasCan2(5200, 5250);
+    GasCan gasCan2(5300, 5250);
     std::vector<Item*> items = { &gasCan1, &gasCan2};
     
     //Mower mower;
