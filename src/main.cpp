@@ -21,7 +21,6 @@
 
 //#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
 Shader* Shader::shader_program = nullptr;
-
 void GetOpenGLErrors();
 int main(int argc, char *argv[])
 {
@@ -130,7 +129,7 @@ int main(int argc, char *argv[])
         }
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.9f);
         player.Render();
-        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
+        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.6f);
         Grass::RenderGrasses();
         SDL_GL_SwapWindow(window);
         current_time = SDL_GetTicks();
