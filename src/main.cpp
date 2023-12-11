@@ -18,6 +18,7 @@
 #include <animation.h>
 #include <grass.h>
 #include <gas-can.h>
+#include <mower.h>
 
 //#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
 Shader* Shader::shader_program = nullptr;
@@ -83,7 +84,9 @@ int main(int argc, char *argv[])
     GasCan gasCan2(5300, 5250);
     std::vector<Item*> items = { &gasCan1, &gasCan2};
     
-    //Mower mower;
+    Mower mower;
+    mower.SetTarget(items[0]);
+
     auto time_at_frame_end = std::chrono::system_clock::now();
     double millis_passed_since_previous_frame = 0;
     while (true)
