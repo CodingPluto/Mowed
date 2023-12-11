@@ -130,6 +130,7 @@ int main(int argc, char *argv[])
         }
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.9f);
         player.Render();
+        mower.Render();
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.6f);
         Grass::RenderGrasses();
         SDL_GL_SwapWindow(window);

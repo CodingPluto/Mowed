@@ -1,7 +1,7 @@
 #include <mower.h>
 #include <render.h>
 #include <shader.h>
-Mower::Mower() : animation_("mower", rect_.x, rect_.y)
+Mower::Mower() : animation_("mow", rect_.x, rect_.y)
 {
 	std::cout << "Animation Width: " << animation_.width_ << std::endl;
 	std::cout << "Animation Height: " << animation_.height_ << std::endl;
