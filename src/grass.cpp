@@ -15,7 +15,7 @@ void Grass::generate_grass()
   texture = pair.first;
   width = pair.second.first;
   height = pair.second.second;
-  GLfloat *vertices = new GLfloat[(4 * 2) * grasses_number];
+  GLfloat *vertices = new GLfloat[(4 * 3) * grasses_number];
   GLuint *indices = new GLuint[6 * grasses_number];
 
   float adj_w = -1;
@@ -40,18 +40,18 @@ void Grass::generate_grass()
     adj_x = (2.0f * ((float) x / WIDTH)) - 1.0f;
     adj_y = -((2.0f * ((float) y / HEIGHT)) - 1.0f);
 
-    vertices[(i * 8) + 0] = adj_x + adj_w;
-    vertices[(i * 8) + 1] = adj_y;
-
-    vertices[(i * 8) + 2] = adj_x + adj_w;
-    vertices[(i * 8) + 3] = adj_y + adj_h;
-
-    vertices[(i * 8) + 4] = adj_x;
-    vertices[(i * 8) + 5] = adj_y + adj_h;
-
-    vertices[(i * 8) + 6] = adj_x;
-    vertices[(i * 8) + 7] = adj_y;
-
+    vertices[(i * 12) + 0] = adj_x + adj_w;
+    vertices[(i * 12) + 1] = adj_y;
+    vertices[(i * 12) + 2] = -0.1f;
+    vertices[(i * 12) + 3] = adj_x + adj_w;
+    vertices[(i * 12) + 4] = adj_y + adj_h;
+    vertices[(i * 12) + 5] = -0.1f;
+    vertices[(i * 12) + 6] = adj_x;
+    vertices[(i * 12) + 7] = adj_y + adj_h;
+    vertices[(i * 12) + 8] = -0.1f;
+    vertices[(i * 12) + 9] = adj_x;
+    vertices[(i * 12) + 10] = adj_y;
+    vertices[(i * 12) + 11] = -0.1f;
     const unsigned int index_offset = i * 6;
     const unsigned int indice_offset = i * 4;
     indices[index_offset + 0] = indice_offset + 0;
@@ -75,12 +75,12 @@ void Grass::generate_grass()
   // vbo
     /////////////////////// Setting Attributes //////////////////////
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * (4 * 2) * grasses_number, vertices, GL_DYNAMIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * (4 * 3) * grasses_number, vertices, GL_DYNAMIC_DRAW);
   // ebo
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6 * grasses_number,indices, GL_DYNAMIC_DRAW);
   // Position attribute
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
   glEnableVertexAttribArray(0);
   glBindVertexArray(0); // Unbind VAO
 
