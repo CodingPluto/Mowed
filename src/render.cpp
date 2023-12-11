@@ -1,5 +1,6 @@
 #include <render.h>
 #include <vector>
+#include <Shader.h>
  std::vector <GLuint*> vbo_cache;
 
  std::vector<GLuint*> ebo_cache;
@@ -30,31 +31,6 @@ std::pair<GLuint, std::pair<int, int>>LoadTextureEx(const char imagePath[]){
 
   return std::pair<GLint, std::pair<int, int>>(texture, std::pair<int, int>(_width, _height));
 }
-
-/*
-void UpdateVertices(float raw_x, float raw_y) {
-  // Assuming the sprite occupies the first two vertices in the vertex array
-  float adj_x = -1;
-  float adj_y = -1;
-  adj_x = (2.0f * ((float)raw_x / WIDTH)) - 1.0f;
-  adj_y = -((2.0f * ((float)raw_y / HEIGHT)) - 1.0f);
-  GLfloat vertices[] = {
-    // Positions                                           // Colors                   // Texture Coords
-     adj_x + adj_w,  adj_y,
-     adj_x + adj_w , adj_y + adj_h,
-     adj_x,          adj_y + adj_h,
-     adj_x,          adj_y,
-  };
-
-
-  vertices[0] = newX;
-  vertices[1] = newY;
-
-  // Update the VBO with the new vertex data
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-}*/
 
 
 GLuint LoadVerticesEx(float raw_x, float raw_y, int raw_width, int raw_height){
@@ -112,4 +88,18 @@ void RenderTexture(GLuint vao, GLuint texture)
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }
+glm::vec4 ScreenCoordinatesConvert(float x, float y)
+{
+  x += 295;
+  y += 290;
+  float ndcX = (2.0f * x) / WIDTH - 1.0f;
+  float ndcY = 1.0f - (2.0f * y) / HEIGHT;
+  glm::vec4 ndcPosition(ndcX, ndcY, 0.0f, 1.0f);
+  glm::mat4 inverseViewProjection = glm::inverse(viewProjection);
+  return inverseViewProjection * (ndcPosition / ndcPosition.w);
+}
 
+void SetModel(const glm::mat4& model)
+{
+  glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+}

@@ -25,8 +25,8 @@ void Grass::generate_grass()
   srand(0); // static_cast<int>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())));
   for (int i = 0; i < grasses_number; ++i)
   {
-    int x = rand() % 200000 - 100;
-    int y = rand() % 200000 - 100;
+    int x = rand() % 20000 - 100;
+    int y = rand() % 20000 - 100;
     float adj_x = -1;
     float adj_y = -1;
     adj_x = (2.0f * ((float) x / WIDTH)) - 1.0f;
@@ -94,8 +94,7 @@ void Grass::FreeGrass()
 void Grass::RenderGrasses()
 {
   glm::mat4 grass_model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,0.0f));
-  glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(grass_model));
-
+  SetModel(grass_model);
 
 
 

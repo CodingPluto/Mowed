@@ -87,47 +87,49 @@ int main(int argc, char *argv[])
     Player player;
     GasCan can1;
     //Mower mower;
+    auto time_at_frame_end = std::chrono::system_clock::now();
+    double millis_passed_since_previous_frame = 0;
     while (true)
     {
-      old_time = current_time;
-      if (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT) {
-          break;
+      if (millis_passed_since_previous_frame >= 0.016)
+      {
+        old_time = current_time;
+        if (SDL_PollEvent(&event)) {
+          if (event.type == SDL_QUIT) {
+            break;
+          }
         }
-    }
-      player.Update();
+        player.Update();
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        Shader::shader_program->Use();
+        cameraPosition.x = camera_x;
+        cameraPosition.y = camera_y;
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), -cameraPosition);
+        viewProjection = projection * view;
+        glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
+        glm::mat4 default_model = glm::mat4(1.0f);
+        default_model = glm::translate(default_model, glm::vec3(0.0f, 0.0f, 0.0f));
+        SetModel(default_model);
+        can1.update();
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(glGetUniformLocation(Shader::shader_program->program, "ourTexture1"), 0.0f);
+        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
+        player.Render();
+        can1.Render();
+        //.Render();
+        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.9f);
+        Grass::RenderGrasses();
+        SDL_GL_SwapWindow(window);
+        current_time = SDL_GetTicks();
+        delta_time = (current_time - old_time) * pow(10, -3);
+        GetOpenGLErrors();
+        //std::cout << delta_time << std::endl;
+        std::cout << "Delta Time: " << delta_time << std::endl;
 
-      glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT);
-      Shader::shader_program->Use();
-      cameraPosition.x = camera_x;
-      cameraPosition.y = camera_y;
-      glm::mat4 view = glm::translate(glm::mat4(1.0f), -cameraPosition);
-      viewProjection = projection * view;
-      glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
-
-
-      glm::mat4 default_model = glm::mat4(1.0f);
-      default_model = glm::translate(default_model, glm::vec3(0.0f, 0.0f, 0.0f));
-      glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(default_model));
-
-
-      glActiveTexture(GL_TEXTURE0);
-      glUniform1i( glGetUniformLocation(Shader::shader_program->program, "ourTexture1" ), 0.0f);
-
-
-      glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
-      player.Render();
-      //.Render();
-      glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.9f);
-      Grass::RenderGrasses();
-
-      SDL_GL_SwapWindow(window);
-      current_time = SDL_GetTicks();
-      delta_time = (current_time - old_time) * pow(10, -3);
-      GetOpenGLErrors();
-      //std::cout << delta_time << std::endl;
-      std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        time_at_frame_end = std::chrono::system_clock::now();
+      }
+      millis_passed_since_previous_frame = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - time_at_frame_end).count() / 1000000.0f;
     }
     /////////////////////////////// Clean Up //////////////////////////////
     for (auto vao : vao_cache)

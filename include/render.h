@@ -26,3 +26,5 @@ void RenderTexture(GLuint vao, GLuint texture);
 std::pair<GLuint,std::pair<int,int>>LoadTextureEx(const char imagePath[]);
 //std::pair<GLuint, GLuint>LoadTextureAndVertices(const char imagePath[], int raw_x, int raw_y);
 #endif //RENDER_H
+glm::vec4 ScreenCoordinatesConvert(float x, float y);
+void SetModel(const glm::mat4 &model);
