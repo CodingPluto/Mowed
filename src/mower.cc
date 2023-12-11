@@ -1,13 +1,27 @@
 #include <mower.h>
-
+#include <render.h>
+#include <shader.h>
 Mower::Mower() : animation_("mower", rect_.x, rect_.y)
 {
-
+	std::cout << "Animation Width: " << animation_.width_ << std::endl;
+	std::cout << "Animation Height: " << animation_.height_ << std::endl;
+	vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width_, animation_.height_);
+	
 }
 
 void Mower::Render()
 {
-	Update();
+	//Update();
+	rect_.x = 0;
+	rect_.y = 0;
+	auto vec = ScreenCoordinatesConvert(rect_.x, rect_.y);
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	SetModel(model);
+
+	GLuint frame_tex = animation_.GetFrame();
+	glBindTexture(GL_TEXTURE_2D, frame_tex);
+	RenderTexture(vao_, frame_tex);
+	glBindVertexArray(0);
 }
 
 void Mower::Update()
