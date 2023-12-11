@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     Player player(5250, 5250);
     GasCan gasCan1(5200, 5250);
     GasCan gasCan2(5200, 5250);
-    std::vector<Item*> items = { &gasCan1, &gasCan2 };
+    std::vector<Item*> items = { &gasCan1, &gasCan2 }
 
     
     //Mower mower;
@@ -122,8 +122,7 @@ int main(int argc, char *argv[])
         glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
 
         glm::mat4 default_model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f,1.0f,0));
-        SetModel(default_model);
-        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
+        SetModel(default_model);        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
         for (Item* i : items) {
             i -> Render();
         }
