@@ -19,6 +19,7 @@
 #include <grass.h>
 #include <gas-can.h>
 #include <mower.h>
+#include <shed.h>
 
 //#include <SDL_image.h> No longer using SDL_image as I couldn't get image loading to work with it. SOIL2 is being used instead.
 Shader* Shader::shader_program = nullptr;
@@ -81,6 +82,7 @@ int main(int argc, char *argv[])
     Grass::generate_grass();
     Player player(5250, 5250);
     GasCan gasCan1(5200, 5250);
+    Shed shed1(5300, 5300);
     std::vector<Item*> items = { &gasCan1};
     
     Mower mower;
@@ -123,13 +125,17 @@ int main(int argc, char *argv[])
         glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "viewProjection"), 1, GL_FALSE, glm::value_ptr(viewProjection));
 
         glm::mat4 default_model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f,1.0f,0));
-        SetModel(default_model);        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
+        SetModel(default_model);        
+        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 1.0f);
         for (Item* i : items) {
             i -> Render();
         }
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.9f);
         player.Render();
+        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.6f);
         mower.Render();
+        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.6f);
+        shed1.Render();
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.6f);
         Grass::RenderGrasses();
         SDL_GL_SwapWindow(window);

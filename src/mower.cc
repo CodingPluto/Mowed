@@ -80,7 +80,6 @@ void Mower::Update()
 	velocity.first += steer.first;
 	velocity.second += steer.second;
 	{
-
 	float norm = sqrt((velocity.first * velocity.first) + (velocity.second * velocity.second));
 	std::pair<float, float>velocity_norm;
 	if (norm != 0)
@@ -95,7 +94,6 @@ void Mower::Update()
 	{
 		velocity = { 0,0 };
 	}
-
 	}
 
 	rect_.x += velocity.first;
