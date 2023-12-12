@@ -21,6 +21,7 @@ public:
 	GLuint vao_;
 	void SetTarget(Item * item);
 	void ChangeTargetType();
+	std::vector<SDL_FRect> objects_;
 private:
 	Item* target_item_ = nullptr;
 	bool target_type_ = 0; //  0 for item, 1 for player
@@ -28,8 +29,9 @@ private:
 	std::vector<float> GetInterest();
 	std::vector<int> GetDanger();
 	std::pair<float, float> angles_[num_rays];
+	std::pair<float, float> rays_[num_rays];
 };
 
-
+int GetOrientation(std::pair<int,int> p, std::pair<int, int> q, std::pair<int, int> r);
 
 #endif

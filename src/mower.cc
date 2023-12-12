@@ -15,6 +15,11 @@ Mower::Mower() : animation_("mower", rect_.x, rect_.y)
 		angles_[i].first = cos(angle);
 		angles_[i].second = sin(angle);
 	}
+	for (int i = 0; i < num_rays; i++)
+	{
+		rays_[i].first = angles_[i].first * look_ahead;
+		rays_[i].second = angles_[i].second * look_ahead;
+	}
 }
 
 void Mower::Render()
@@ -33,7 +38,8 @@ void Mower::Render()
 void Mower::Update()
 {
 	//interest vector calculation
-	std::vector interest = GetInterest();
+	std::vector<float> interest = GetInterest();
+	std::vector<int> danger = GetDanger();
 	
 }
 
@@ -64,7 +70,49 @@ std::vector<float> Mower::GetInterest()
 
 std::vector<int> Mower::GetDanger()
 {
-	return std::vector<int>();
+	std::vector<int> danger(num_rays);
+	for (int i = 0; i < num_rays; i++)
+	{
+		std::pair<float, float> thisray;
+		thisray.first = rays_[i].first + rect_.x;
+		thisray.second = rays_[i].second + rect_.y;
+		for (auto obj : objects_)
+		{
+			std::pair<int, int> points[] = {
+			{obj.x, obj.y}, // top left
+			{obj.x + obj.w, obj.y}, // top right
+			{obj.x + obj.w, obj.y + obj.h}, // bottom right
+			{obj.x, obj.y + obj.h} // bottom left
+			// use lines with adject indexes
+			};
+			int lenght = sizeof(points) / sizeof(std::pair<int, int>);
+			for (int i = 0; i < lenght; i++)
+			{
+				std::pair<int, int> p1 = { rect_.x, rect_.y };
+				std::pair<int, int> q1 = thisray;
+
+				std::pair<int, int> p2 = points[i];
+				if (i == lenght - 1)
+				{
+					std::pair<int, int> q2 = points[i + 1];
+				}
+				else
+				{
+					std::pair<int, int> q2 = points[i+1];
+				}
+
+			}
+		}
+	}
+	return danger;
 }
 
 
+int GetOrientation(std::pair<int, int> p, std::pair<int, int> q, std::pair<int, int> r)
+{
+	if (q.first <= std::max(p.first, r.first) && q.first >= std::min(p.first, r.first) &&
+		q.second <= std::max(p.second, r.second) && q.second >= std::min(p.second, r.second))
+		return true;
+
+	return false;
+}
