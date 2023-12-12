@@ -81,12 +81,10 @@ int main(int argc, char *argv[])
     Grass::generate_grass();
     Player player(5250, 5250);
     GasCan gasCan1(5200, 5250);
-    GasCan gasCan2(5300, 5250);
-    std::vector<Item*> items = { &gasCan1, &gasCan2};
+    std::vector<Item*> items = { &gasCan1};
     
     Mower mower;
     mower.SetTarget(items[0]);
-    mower.AddObstruction(gasCan2.rect_.x, gasCan2.rect_.y);
 
     auto time_at_frame_end = std::chrono::system_clock::now();
     double millis_passed_since_previous_frame = 0;
@@ -138,7 +136,7 @@ int main(int argc, char *argv[])
         current_time = SDL_GetTicks();
         delta_time = (current_time - old_time) * pow(10, -3);
         GetOpenGLErrors();
-        std::cout << "Delta Time: " << delta_time << std::endl;
+        //std::cout << "Delta Time: " << delta_time << std::endl;
 
         time_at_frame_end = std::chrono::system_clock::now();
       }
