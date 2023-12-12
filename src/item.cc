@@ -19,7 +19,8 @@ void Item::Render()
 {	
   auto vec = ScreenCoordinatesConvert(rect_.x, rect_.y);
   glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(vec.x, vec.y,0.0f));
-  glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+  SetModel(model);
+  //glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
 	GLuint frame_tex = animation_.GetFrame();
 	glBindTexture(GL_TEXTURE_2D, frame_tex);

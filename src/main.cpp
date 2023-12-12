@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
     
     Mower mower;
     mower.SetTarget(items[0]);
+    mower.AddObstruction(gasCan2.rect_.x, gasCan2.rect_.y);
 
     auto time_at_frame_end = std::chrono::system_clock::now();
     double millis_passed_since_previous_frame = 0;
