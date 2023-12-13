@@ -4,12 +4,14 @@
 #include <cmath>
 #include <algorithm>
 
-Mower::Mower(int x, int y) : animation_("mower", x, y)
+Mower::Mower(int x, int y) : animation_("mower")
 {
 	std::cout << "Animation Width: " << animation_.width_ << std::endl;
 	std::cout << "Animation Height: " << animation_.height_ << std::endl;
 	rect_.x = x;
 	rect_.y = y;
+	rect_.w = animation_.width_;
+	rect_.h = animation_.height_;
 	vao_ = LoadVerticesEx(0, 0, animation_.width_, animation_.height_);
 	for (int i = 0; i < num_rays; i++)
 	{
@@ -49,7 +51,7 @@ void Mower::Update()
 		if (danger[i] != 0)
 		{
 			float danger_magnitude = danger[i] / danger_amount;
-			danger_magnitude = pow(danger_magnitude, -1);
+			danger_magnitude = pow(danger_magnitude, - 1.2);
 			/*danger_magnitude = danger_magnitude * 100;
 			danger_magnitude = pow(danger_magnitude, danger_amount);*/
 			interest[i] -= danger_magnitude;
@@ -79,31 +81,43 @@ void Mower::Update()
 	}
 	
 	//acceleration calculation
-	/*std::pair<float, float> steer;
+	std::pair<float, float> steer;
 	steer.first = (resultant.first - velocity.first) * steer_force;
 	steer.second = (resultant.second - velocity.second) * steer_force;
 
 	velocity.first += steer.first;
 	velocity.second += steer.second;
 	{
-	float norm = sqrt((velocity.first * velocity.first) + (velocity.second * velocity.second));
-	std::pair<float, float>velocity_norm;
-	if (norm != 0)
-	{
-	velocity_norm.first = velocity.first / norm;
-	velocity_norm.second = velocity.second / norm;
-	velocity.first = velocity_norm.first * mower_speed_ / norm;
-	velocity.second = velocity_norm.second * mower_speed_ / norm;
+		float norm = sqrt((velocity.first * velocity.first) + (velocity.second * velocity.second));
+		std::pair<float, float>velocity_norm;
+		if (norm != 0)
+		{
+		velocity_norm.first = velocity.first / norm;
+		velocity_norm.second = velocity.second / norm;
+		velocity.first = velocity_norm.first * (mower_speed_);
+		velocity.second = velocity_norm.second * (mower_speed_);
 
+		}
+		else
+		{
+			velocity = { 0,0 };
+		}
 	}
-	else
 	{
-		velocity = { 0,0 };
-	}
-	}*/
+		std::pair<float, float> to_target;
+		to_target.first = target_item_->rect_.x - rect_.x;
+		to_target.second = target_item_->rect_.y - rect_.y;
+		float norm = sqrt((to_target.first * to_target.first) + (to_target.second * to_target.second));
+		to_target.first = to_target.first / norm;
+		to_target.second = to_target.second / norm;
 
-	rect_.x += resultant.first * mower_speed_;
-	rect_.y += resultant.second * mower_speed_;
+		if (norm <= 50)
+		{
+			velocity = { 0,0 };
+		}
+	}
+	rect_.x += velocity.first;
+	rect_.y += velocity.second;
 }
 
 void Mower::SetTarget(Item* item)
@@ -141,8 +155,8 @@ std::vector<int> Mower::GetDanger()
 	for (int i = 0; i < num_rays; i++)
 	{
 		std::pair<float, float> thisray;
-		thisray.first = rays_[i].first + rect_.x;
-		thisray.second = rays_[i].second + rect_.y;
+		thisray.first = rays_[i].first + rect_.x + (rect_.w / 2);
+		thisray.second = rays_[i].second + rect_.y + (rect_.h / 2);
 		for (auto obj : objects_)
 		{
 			std::pair<int, int> points[] = {
@@ -155,7 +169,7 @@ std::vector<int> Mower::GetDanger()
 			int lenght = sizeof(points) / sizeof(std::pair<int, int>);
 			for (int j = 0; j < lenght; j++)
 			{
-				std::pair<int, int> p1 = { rect_.x, rect_.y };
+				std::pair<int, int> p1 = { rect_.x + (rect_.w / 2), rect_.y + (rect_.h / 2) };
 				std::pair<int, int> q1 = thisray;
 
 				std::pair<int, int> p2 = points[j];

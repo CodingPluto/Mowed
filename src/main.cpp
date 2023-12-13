@@ -80,14 +80,14 @@ int main(int argc, char *argv[])
     double delta_time = 0;
     glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f);
     Grass::generate_grass();
-    Player player(250, 0);
-    GasCan gasCan1(5200, 5250);
+    Player player(0, 0);
+    GasCan gasCan1(600, 600);
     
     std::vector<Item*> items = { &gasCan1};
     
     Mower mower(0, 0);
     mower.SetTarget(items[0]);
-    Shed shed1(250, 250);
+    Shed shed1(300, 300);
     mower.objects_.push_back(shed1.rect_);
 
     auto time_at_frame_end = std::chrono::system_clock::now();

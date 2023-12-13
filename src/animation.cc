@@ -5,7 +5,7 @@
 #include <math.h>
 #include <filesystem>
 
-animation::animation(std::string name, int x, int y)
+animation::animation(std::string name)
 {
     std::string path = name + "/";
     int index_pointer = 0;

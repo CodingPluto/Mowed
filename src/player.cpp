@@ -51,7 +51,7 @@ void Player::Controller()
   }
 }
 
-Player::Player(float x, float y):keyboard_(SDL_GetKeyboardState(0)), animation_("player", rect_.x, rect_.y)
+Player::Player(float x, float y):keyboard_(SDL_GetKeyboardState(0)), animation_("player")
 {
   std::cout << "Entered Constructor" << std::endl;
   velocity.x = 0;
@@ -61,7 +61,7 @@ Player::Player(float x, float y):keyboard_(SDL_GetKeyboardState(0)), animation_(
   rect_.x = 0;
   rect_.y = 0;
   std::cout << "Created Player" << std::endl;
-  vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width_, animation_.height_);
+  vao_ = LoadVerticesEx(0, 0, animation_.width_, animation_.height_);
 }
 
 

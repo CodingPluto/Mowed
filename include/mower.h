@@ -6,10 +6,10 @@
 #include <vector>
 #include <item.h>
 
-const float steer_force = 5;
+const float steer_force = 0.6;
 const int look_ahead = 500;
-const int num_rays = 32;
-const float danger_amount = 250;
+const int num_rays = 128;
+const float danger_amount = 900;
 
 
 class Mower

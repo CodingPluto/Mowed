@@ -10,7 +10,7 @@
 class  animation
 {
 public:
-	animation(std::string name, int x, int y);
+	animation(std::string name);
 	GLuint GetFrame();
 	void Setstate(int state);
 	void QueState(int state);
