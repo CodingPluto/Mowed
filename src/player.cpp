@@ -5,7 +5,7 @@
 #include <Shader.h>
 #include <Grass.h>
 GLuint Player::player_textures_[8] = {};
-float speed = 0.5;
+float speed = 1;
 float z = 0;
 void Player::Controller()
 {
@@ -51,17 +51,15 @@ void Player::Controller()
   }
 }
 
-Player::Player(float x, float y):keyboard_(SDL_GetKeyboardState(0)), animation_("player", rect_.x, rect_.y)
+Player::Player(float x, float y):keyboard_(SDL_GetKeyboardState(0)), animation_("assets/player", x, y)
 {
   std::cout << "Entered Constructor" << std::endl;
   velocity.x = 0;
   velocity.y = 0;
-  starting_position.x = x;
-  starting_position.y = y;
-  rect_.x = 0;
-  rect_.y = 0;
+  rect_.x = x;
+  rect_.y = y;
   std::cout << "Created Player" << std::endl;
-  vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width_, animation_.height_);
+  vao_ = LoadVerticesEx(0, 0, animation_.width_, animation_.height_);
 }
 
 
@@ -74,46 +72,43 @@ void Player::Update()
   rect_.y += velocity.y;
   velocity.x *= 0.7;
   velocity.y *= 0.7;
-  if (rect_.x > (GRASS_BORDER_X + GRASS_BORDER_OFFSET_X - animation_.width_ / 2) - starting_position.x)
+  if (rect_.x > (GRASS_BORDER_X + GRASS_BORDER_OFFSET_X - animation_.width_ / 2))
   {
-    rect_.x = GRASS_BORDER_X + GRASS_BORDER_OFFSET_X - animation_.width_ / 2 - starting_position.x;
+    rect_.x = GRASS_BORDER_X + GRASS_BORDER_OFFSET_X - animation_.width_ / 2;
   }
-  else if (rect_.x < (GRASS_BORDER_OFFSET_X + animation_.width_ / 2) - starting_position.x)
+  else if (rect_.x < (GRASS_BORDER_OFFSET_X + animation_.width_ / 2))
   {
-    rect_.x = GRASS_BORDER_OFFSET_X + animation_.width_ / 2 - starting_position.x;
-  }
-
-  if (rect_.y > (GRASS_BORDER_Y + GRASS_BORDER_OFFSET_Y - animation_.height_ / 2) - starting_position.y)
-  {
-    rect_.y = (GRASS_BORDER_Y + GRASS_BORDER_OFFSET_Y - animation_.height_ / 2) - starting_position.y;
-  }
-  else if (rect_.y < (GRASS_BORDER_OFFSET_Y + animation_.height_ / 2) - starting_position.y)
-  {
-    rect_.y = GRASS_BORDER_OFFSET_Y + animation_.height_ / 2 - starting_position.y;
+    rect_.x = GRASS_BORDER_OFFSET_X + animation_.width_ / 2;
   }
 
+  if (rect_.y > (GRASS_BORDER_Y + GRASS_BORDER_OFFSET_Y - animation_.height_ / 2))
+  {
+    rect_.y = (GRASS_BORDER_Y + GRASS_BORDER_OFFSET_Y - animation_.height_ / 2);
+  }
+  else if (rect_.y < (GRASS_BORDER_OFFSET_Y + animation_.height_ / 2))
+  {
+    rect_.y = GRASS_BORDER_OFFSET_Y + animation_.height_ / 2;
+  }
   if (holding_ != nullptr) {
-      holding_->rect_.x = (rect_.x + starting_position.x + (WIDTH/2));
-      holding_->rect_.y = (rect_.y + starting_position.y + (HEIGHT/2));
+      holding_->rect_.x = (rect_.x);
+      holding_->rect_.y = (rect_.y);
   }
   float adj_w = -1;
   float adj_h = -1;
   adj_w = (2.0f * ((float)animation_.width_ / WIDTH));
   adj_h = -((2.0f * ((float)animation_.height_ / HEIGHT)));
-  float adj_x = -1;
-  float adj_y = -1;
-  adj_x = (2.0f * ((float)(rect_.x) / WIDTH)) - 1.0f;
-  adj_y = -((2.0f * ((float)(rect_.y) / HEIGHT)) - 1.0f);
-  auto vec = ScreenCoordinatesConvert(starting_position.x, starting_position.y);
-  camera_x = adj_x + 1 - (adj_w / 2) + vec.x;
-  camera_y = adj_y - 1 - (adj_h / 2) + vec.y;
+  auto vec = ScreenCoordinatesConvert(rect_.x - WIDTH / 2, rect_.y - HEIGHT / 2);
+  camera_x = vec.x + adj_w / 2;
+  camera_y = vec.y + adj_h / 2;
 }
 
 
 void Player::Render()
 {
-
-  player_model = glm::translate(glm::mat4(1.0f), glm::vec3(camera_x + 1,camera_y - 1, 0.0f));
+  std::cout << "Rect: X: " << rect_.x << " : " << rect_.y << std::endl;
+  auto vec = ScreenCoordinatesConvert(rect_.x, rect_.y);
+  std::cout << "Player: " << vec.x << " : " << vec.y << std::endl;
+  player_model = glm::translate(glm::mat4(1.0f), glm::vec3(vec.x, vec.y, 0.0f));
   glUniformMatrix4fv(glGetUniformLocation(Shader::shader_program->program, "model"), 1, GL_FALSE, glm::value_ptr(player_model));
   GLuint frame_tex = animation_.GetFrame();
   glBindTexture(GL_TEXTURE_2D, frame_tex);
@@ -134,8 +129,8 @@ void Player::PutDown()
 int Player::GetDistanceToItem(Item* item)
 {
     std::pair<int, int> buffer_vector;
-    buffer_vector.first =  item->rect_.x - (rect_.x + starting_position.x + (WIDTH / 2));
-    buffer_vector.second =  item->rect_.y - (rect_.y + starting_position.y + (HEIGHT / 2));
+    buffer_vector.first =  item->rect_.x - (rect_.x);
+    buffer_vector.second =  item->rect_.y - (rect_.y);
     int sum = (buffer_vector.first * buffer_vector.first) + (buffer_vector.second * buffer_vector.second);
     int norm = sqrt(sum);
     return norm;

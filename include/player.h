@@ -13,7 +13,6 @@
 class Player
 {
 private:
-  glm::vec2 starting_position = {};
   static GLuint player_textures_[8];
   const Uint8* keyboard_;
   void Controller();

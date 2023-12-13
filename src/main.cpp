@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
     double delta_time = 0;
     glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f);
     Grass::generate_grass();
-    Player player(250, 0);
-    GasCan gasCan1(5200, 5250);
+    Player player(WIDTH/2, HEIGHT/2);
+    GasCan gasCan1(200, 200);
     
     std::vector<Item*> items = { &gasCan1};
     
