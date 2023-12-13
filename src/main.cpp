@@ -80,13 +80,15 @@ int main(int argc, char *argv[])
     double delta_time = 0;
     glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f);
     Grass::generate_grass();
-    Player player(5250, 5250);
+    Player player(250, 0);
     GasCan gasCan1(5200, 5250);
-    Shed shed1(5300, 5300);
+    
     std::vector<Item*> items = { &gasCan1};
     
-    Mower mower;
+    Mower mower(0, 0);
     mower.SetTarget(items[0]);
+    Shed shed1(250, 250);
+    mower.objects_.push_back(shed1.rect_);
 
     auto time_at_frame_end = std::chrono::system_clock::now();
     double millis_passed_since_previous_frame = 0;
@@ -135,9 +137,8 @@ int main(int argc, char *argv[])
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.6f);
         mower.Render();
         glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.6f);
-        shed1.Render();
-        glUniform1f(glGetUniformLocation(Shader::shader_program->program, "opacity"), 0.6f);
         Grass::RenderGrasses();
+        shed1.Render();
         SDL_GL_SwapWindow(window);
         current_time = SDL_GetTicks();
         delta_time = (current_time - old_time) * pow(10, -3);
