@@ -6,17 +6,18 @@
 #include <vector>
 #include <item.h>
 
-const float steer_force = 1;
-const int look_ahead = 100;
+const float steer_force = 5;
+const int look_ahead = 500;
 const int num_rays = 32;
+const float danger_amount = 250;
 
 
 class Mower
 {
 public:
-	Mower();
+	Mower(int x, int y);
 	animation animation_;
-	SDL_FRect rect_ = { 250,250,0,0 };
+	SDL_FRect rect_ = { 0,0,0,0 };
 	void Render();
 	void Update();
 	GLuint vao_;
@@ -26,7 +27,7 @@ public:
 private:
 	Item* target_item_ = nullptr;
 	bool target_type_ = 0; //  0 for item, 1 for player
-	float mower_speed_ = 5;
+	float mower_speed_ = 7;
 	std::vector<float> GetInterest();
 	std::vector<int> GetDanger();
 	std::pair<float, float> angles_[num_rays];

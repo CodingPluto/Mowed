@@ -4,11 +4,13 @@
 #include <cmath>
 #include <algorithm>
 
-Mower::Mower() : animation_("mower", rect_.x, rect_.y)
+Mower::Mower(int x, int y) : animation_("mower", x, y)
 {
 	std::cout << "Animation Width: " << animation_.width_ << std::endl;
 	std::cout << "Animation Height: " << animation_.height_ << std::endl;
-	vao_ = LoadVerticesEx(rect_.x, rect_.y, animation_.width_, animation_.height_);
+	rect_.x = x;
+	rect_.y = y;
+	vao_ = LoadVerticesEx(0, 0, animation_.width_, animation_.height_);
 	for (int i = 0; i < num_rays; i++)
 	{
 		float angle = i * 2 * M_PI / num_rays;
@@ -26,7 +28,8 @@ void Mower::Render()
 {
 	Update();
 	auto vec = ScreenCoordinatesConvert(rect_.x, rect_.y);
-	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(vec.x, vec.y, 0.1f));
+	std::cout << vec.x << ", " << vec.y << std::endl;
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(vec.x, vec.y, 0.0f));
 	SetModel(model);
 
 	GLuint frame_tex = animation_.GetFrame();
@@ -45,7 +48,11 @@ void Mower::Update()
 	{
 		if (danger[i] != 0)
 		{
-			interest[i] = 0;
+			float danger_magnitude = danger[i] / danger_amount;
+			danger_magnitude = pow(danger_magnitude, -1);
+			/*danger_magnitude = danger_magnitude * 100;
+			danger_magnitude = pow(danger_magnitude, danger_amount);*/
+			interest[i] -= danger_magnitude;
 		}
 	}
 	// calculate resulatant interest vector
@@ -61,7 +68,7 @@ void Mower::Update()
 	//vector normalisation
 	
 	float norm = sqrt((resultant.first * resultant.first) + (resultant.second * resultant.second));
-	if (norm >= 10.0f)
+	if (norm != 0.0f)
 	{
 	resultant.first = resultant.first / norm;
 	resultant.second = resultant.second / norm;
@@ -71,9 +78,8 @@ void Mower::Update()
 		resultant = { 0,0 };
 	}
 	
-	std::cout << "Resultant: " << resultant.first << ", "<< resultant.second << std::endl;
 	//acceleration calculation
-	std::pair<float, float> steer;
+	/*std::pair<float, float> steer;
 	steer.first = (resultant.first - velocity.first) * steer_force;
 	steer.second = (resultant.second - velocity.second) * steer_force;
 
@@ -94,10 +100,10 @@ void Mower::Update()
 	{
 		velocity = { 0,0 };
 	}
-	}
+	}*/
 
-	rect_.x += velocity.first;
-	rect_.y += velocity.second;
+	rect_.x += resultant.first * mower_speed_;
+	rect_.y += resultant.second * mower_speed_;
 }
 
 void Mower::SetTarget(Item* item)
@@ -113,9 +119,12 @@ void Mower::ChangeTargetType()
 std::vector<float> Mower::GetInterest()
 {
 	std::vector<float> interest;
-	std::pair<int,int> to_target;
-	to_target.first = target_item_->rect_.x - rect_.x - WIDTH/8;
-	to_target.second = target_item_->rect_.y - rect_.y - HEIGHT/4;
+	std::pair<float,float> to_target;
+	to_target.first = target_item_->rect_.x - rect_.x;
+	to_target.second = target_item_->rect_.y - rect_.y;
+	float norm = sqrt((to_target.first * to_target.first) + (to_target.second * to_target.second));
+	to_target.first = to_target.first / norm;
+	to_target.second = to_target.second / norm;
 
 	for (auto i : angles_)
 	{
@@ -153,24 +162,43 @@ std::vector<int> Mower::GetDanger()
 				std::pair<int, int> q2;
 				if (j == lenght - 1)
 				{
-					std::pair<int, int> q2 = points[0];
+					q2 = points[0];
 				}
 				else
 				{
-					std::pair<int, int> q2 = points[j+1];
+					q2 = points[j+1];
 				}
 				int o1 = GetOrientation(p1, q1, p2);
 				int o2 = GetOrientation(p1, q1, q2);
 				int o3 = GetOrientation(p2, q2, p1);
 				int o4 = GetOrientation(p2, q2, q1);
-				if (o1 != o2 && o3 != o4) {
-					danger[i] = 1;
+				if (o1 != o2 && o3 != o4) 
+				{
+					//y = mx + c
+					//m = del_y/del_x
+
+					std::pair<float, float> intersect;
+
+					double a = q1.second - p1.second;
+					double b = p1.first - q1.first;
+					double c = a * (p1.first) + b * (p1.second);
+					// Line CD represented as a2x + b2y = c2
+					double a1 = q2.second - p2.second;
+					double b1 = p2.first - q2.first;
+					double c1 = a1 * (p2.first) + b1 * (p2.second);
+					double det = a * b1 - a1 * b;
+
+					intersect.first = (b1 * c - b * c1) / det;
+					intersect.second = (a * c1 - a1 * c) / det;
+
+					float norm = sqrt((intersect.first * intersect.first) + (intersect.second * intersect.second));
+
+					danger[i] = norm;
 					break;
 				}
 				else
 				{
 					danger[i] = 0;
-					break;
 				}
 					
 			}
