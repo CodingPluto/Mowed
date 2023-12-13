@@ -4,7 +4,7 @@
 #include <cmath>
 #include <algorithm>
 
-Mower::Mower(int x, int y) : animation_("mower")
+Mower::Mower(int x, int y) : animation_("assets/mower")
 {
 	std::cout << "Animation Width: " << animation_.width_ << std::endl;
 	std::cout << "Animation Height: " << animation_.height_ << std::endl;

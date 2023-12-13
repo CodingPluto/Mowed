@@ -1,7 +1,7 @@
 #include "shed.h"
 #include <render.h>
 
-Shed::Shed(int x, int y) : animation_("shed")
+Shed::Shed(int x, int y) : animation_("assets/shed")
 {
 	rect_.w = animation_.width_;
 	rect_.h = animation_.height_;
