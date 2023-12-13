@@ -93,8 +93,8 @@ glm::vec2 ScreenCoordinatesConvert(float x, float y)
 {
   float adj_x = -1;
   float adj_y = -1;
-  adj_x = (2.0f * ((float)(x) / WIDTH)) - 1.0f;
-  adj_y = -((2.0f * ((float)(y) / HEIGHT)) - 1.0f);
+  adj_x = (2.0f * ((float)(x) / WIDTH));
+  adj_y = -((2.0f * ((float)(y) / HEIGHT)));
   return glm::vec2(adj_x, adj_y);
 }
 

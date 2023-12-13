@@ -5,7 +5,7 @@
 #include <SDL.h>
 #include <vector>
 
-#define GRASS_NUMBER 3000
+#define GRASS_NUMBER 30000
 #define GRASS_BORDER_X 10000
 #define GRASS_BORDER_Y 10000
 #define GRASS_BORDER_OFFSET_X 0 

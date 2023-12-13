@@ -11,7 +11,7 @@ GLuint vao_test;
 int Grass::width, Grass::height;
 void Grass::generate_grass()
 {
-  auto pair = LoadTextureEx("grass.png");
+  auto pair = LoadTextureEx("assets/grass.png");
   texture = pair.first;
   width = pair.second.first;
   height = pair.second.second;
@@ -22,7 +22,7 @@ void Grass::generate_grass()
   float adj_h = -1;
   adj_w = (2.0f * ((float)width / WIDTH));
   adj_h = -((2.0f * ((float)height / HEIGHT)));
-  srand(0); // static_cast<int>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())));
+  srand(static_cast<int>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())));
   for (int i = 0; i < grasses_number; ++i)
   {
     bool generating = true;
