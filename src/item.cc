@@ -2,7 +2,7 @@
 #include <render.h>
 #include <Shader.h>
 
-Item::Item(std::string name) : animation_(name, rect_.x, rect_.y)
+Item::Item(std::string name) : animation_(name)
 {
 	std::cout << "initilsed item " << name << std::endl;
 	vao_ = LoadVerticesEx(0, 0, animation_.width_, animation_.height_);

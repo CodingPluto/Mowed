@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     
     Mower mower(0, 0);
     mower.SetTarget(items[0]);
-    Shed shed1(250, 250);
+    Shed shed1(300, 300);
     mower.objects_.push_back(shed1.rect_);
 
     auto time_at_frame_end = std::chrono::system_clock::now();
