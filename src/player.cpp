@@ -51,7 +51,7 @@ void Player::Controller()
   }
 }
 
-Player::Player(float x, float y):keyboard_(SDL_GetKeyboardState(0)), animation_("player")
+Player::Player(float x, float y):keyboard_(SDL_GetKeyboardState(0)), animation_("assets/player")
 {
   std::cout << "Entered Constructor" << std::endl;
   velocity.x = 0;
