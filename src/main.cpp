@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f);
     Grass::generate_grass();
     Player player(WIDTH/2 - 16, HEIGHT/2 - 32);
-    GasCan gasCan1(0, 0);
+    GasCan gasCan1(600, 600);
     
     std::vector<Item*> items = { &gasCan1};
     
